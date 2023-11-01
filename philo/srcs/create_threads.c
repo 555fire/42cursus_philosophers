@@ -3,39 +3,44 @@
 void	create_threads(t_data *d)
 {
 	size_t	i;
-//	void	*f;
+	void	*func_ptr;
 
-	__DEBUG__(d);
+//	__DEBUG__(d);
 
 	if (errno || d->errstat)
+	{
+		__DEBUG__(d);
 		return ;
+	}
 
 	i = 0;
 	while (i <= d->i.n_philo)
 	{
-		__DEBUG__(d);
+//		__DEBUG__(d);
+
 		d->p_arr[i].d = d;
 		d->p_arr[i].philo_i = i;
-		__DEBUG_WITH_INPUT__(d);
+
 		if (i == 0)
 		{
 			d->p_arr[i].threadrole = A_MONITOR;
-			__DEBUG_WITH_OWN_P__(d, &d->p_arr[i]);
-			if (pthread_create(&d->thread_arr[i], NULL, monitor_routine, &d->p_arr[i]))
-			{
-				d->errstat = THREAD_CREATE_ERROR;
-				return ;
-			}
-			i++;
-			continue ;
+			func_ptr = &monitor_routine;
 		}
-		d->p_arr[i].threadrole = ONE_OF_PHILOS;
-		__DEBUG_WITH_OWN_P__(d, &d->p_arr[i]);
-		if (pthread_create(&d->thread_arr[i], NULL, philo_routine, &d->p_arr[i]))
+		else
+		{
+			d->p_arr[i].threadrole = ONE_OF_PHILOS;
+			func_ptr = &philo_routine;
+		}
+
+		if (pthread_create(&d->thread_arr[i], NULL, func_ptr, &d->p_arr[i]))
 		{
 			d->errstat = THREAD_CREATE_ERROR;
+//			__DEBUG_WITH_OWN_P__(d, &d->p_arr[i]);
 			return ;
 		}
+
+//		__DEBUG_WITH_INPUT__(d);
+
 		i++;
 	}
 
@@ -43,50 +48,3 @@ void	create_threads(t_data *d)
 
 	return ;
 }
-
-//	i = 0;
-//	while (i <= d->i.n_philo)
-//	{
-//		__DEBUG__(d);
-//		d->p_arr[i].d = d;
-//		d->p_arr[i].philo_i = i;
-//		__DEBUG_WITH_INPUT__(d);
-//		if (i == 0)
-//		{
-//			d->p_arr[i].threadrole = A_MONITOR;
-//			__DEBUG_WITH_OWN_P__(d, &d->p_arr[i]);
-//			if (pthread_create(&d->thread_arr[i], NULL, philo_routine, &d->p_arr[i]))
-//			{
-//				d->errstat = THREAD_CREATE_ERROR;
-//				return ;
-//			}
-//			i++;
-//		}
-//		d->p_arr[i].threadrole = ONE_OF_PHILOS;
-//		__DEBUG_WITH_OWN_P__(d, &d->p_arr[i]);
-//		if (pthread_create(&d->thread_arr[i], NULL, philo_routine, &d->p_arr[i]))
-//		{
-//			d->errstat = THREAD_CREATE_ERROR;
-//			return ;
-//		}
-//		i++;
-//	}
-
-//	i = 0;
-//	while (i < d->i.n_philo)
-//	{
-//		__DEBUG__(d);
-//		d->p_arr[i].d = d;
-//		d->p_arr[i].philo_i = i + 1;
-//		if (pthread_create(&d->thread_arr[i], NULL, philo_routine, &d->p_arr[i]))
-//		{
-//			d->errstat = THREAD_CREATE_ERROR;
-//			return ;
-//		}
-//		i++;
-//	}
-//
-//	d->p_arr[i].d = d;
-//	d->p_arr[i].threadrole = A_MONITOR;
-//	if (pthread_create(&d->thread_arr[i], NULL, monitor_routine, &d->p_arr[i]))
-//		d->errstat = THREAD_CREATE_ERROR;

@@ -4,24 +4,21 @@ int	main(int argc, char **argv)
 {
 	t_data	*d;
 
+	__DEBUG_PRINT_SIMUSTART__();
+
 	d = NULL;
-
-//	__DEBUG_RING_SINGLE_BELL_AND_PRINT_THE_BELL_RANG__();
-//	__DEBUG_PRINT_THE_BELL_RANG__();
-//	__DEBUG_RING_SINGLE_BELL__();
-//	__DEBUG_PRINT_THE_BELL_RANG__();
-
 	d = set_data(d, argc, argv);
 
-	__DEBUG__(d);
+//	__DEBUG__(d);
 
 	create_threads(d);
 
-	__DEBUG__(d);
+//	__DEBUG__(d);
 
 	clean_resources(d);
 
-	__DEBUG__(d);
+//	__DEBUG__(d);
+	__DEBUG_PRINT_SIMUEND__();
 
 	return (0);
 }

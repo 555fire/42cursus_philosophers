@@ -10,6 +10,7 @@ void	print_errstat_without_d(t_errstat errstat)
 		printf("%s", ERRMSG_CALLOC_ARGS);
 	else if (errstat == MALLOC_ERROR)
 		printf("%s", ERRMSG_MALLOC);
+	return ;
 }
 
 void	print_errstat(t_data *d, t_errstat errstat)
@@ -42,29 +43,31 @@ void	print_errstat(t_data *d, t_errstat errstat)
 	else if (errstat == USLEEP_ERROR)
 		printf("%s", ERRMSG_USLEEP);
 	d->printstat = LOCKED;
-	return (0);
+	return ;
 }
 
 t_funcstat	print_philostat(t_personal *own_p, t_philostat philostat)
 {
 	time_t	usec_time;
+	time_t	relative_usec_time;
 
 	usec_time = get_usec_time(own_p->d);
 	if (own_p->d->errstat)
 		return (1);
+	relative_usec_time = usec_time - own_p->d->start_time;
 	own_p->d->printstat = UNLOCKED;
 	if (philostat == WAITING_FOR_TAKINGFORK)
 		;
 	else if (philostat == HASTOOKFORK)
-		printf("%ld%s%zu%s%s", usec_time, SPC, own_p->philo_i, SPC, MSG_TOOKFORK);
+		printf("%ld%s%zu%s%s", relative_usec_time, SPC, own_p->philo_i, SPC, MSG_TOOKFORK);
 	else if (philostat == EATING)
-		printf("%ld%s%zu%s%s", usec_time, SPC, own_p->philo_i, SPC, MSG_EATING);
+		printf("%ld%s%zu%s%s", relative_usec_time, SPC, own_p->philo_i, SPC, MSG_EATING);
 	else if (philostat == SLEEPING)
-		printf("%ld%s%zu%s%s", usec_time, SPC, own_p->philo_i, SPC, MSG_SLEEPING);
+		printf("%ld%s%zu%s%s", relative_usec_time, SPC, own_p->philo_i, SPC, MSG_SLEEPING);
 	else if (philostat == THINKING)
-		printf("%ld%s%zu%s%s", usec_time, SPC, own_p->philo_i, SPC, MSG_THINKING);
+		printf("%ld%s%zu%s%s", relative_usec_time, SPC, own_p->philo_i, SPC, MSG_THINKING);
 	else if (philostat == DEAD)
-		printf("%ld%s%zu%s%s", usec_time, SPC, own_p->philo_i, SPC, MSG_DIED);
+		printf("%ld%s%zu%s%s", relative_usec_time, SPC, own_p->philo_i, SPC, MSG_DIED);
 	own_p->d->printstat = LOCKED;
 	return (0);
 }

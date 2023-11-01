@@ -6,15 +6,14 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <limits.h>
-# include <pthread.h>	// header file for "pthread_create",
-						// "pthread_join", "pthread_mutex_init",
-						// "pthread_mutex_destroy".
-# include <sys/time.h>	// header file for "gettimeofday".
-# include <string.h>	// header file for "memset".
-# include <stdatomic.h>	// header file for "_Atomic".
-# include <unistd.h>	// header file for "sleep", "usleep".
+# include <pthread.h>	/*	header file for "pthread_create",
+							"pthread_join", "pthread_mutex_init",
+							"pthread_mutex_destroy".			*/
+# include <sys/time.h>	/*	header file for "gettimeofday".		*/
+# include <string.h>	/*	header file for "memset".			*/
+# include <stdatomic.h>	/*	header file for "_Atomic".			*/
+# include <unistd.h>	/*	header file for "sleep", "usleep".	*/
 # include <errno.h>
-
 
 
 /*----macroinstructions(macros)----*/
@@ -47,51 +46,63 @@ time_to_sleep, [number_of_times_each_philosopher_must_eat].\n"
 # define MSG_THINKING " is thinking.\n"
 
 /* -----object-like macro for ANSI escape code----*/
+# define ANSI_BOLD "\033[1m"
+# define ANSI_BOLD_BLINK "\033[1;5m"
+
 # define ANSI_BOLD_BLINK_RED "\033[1;5;31m"
-# define ANSI_BOLD_BLINK_CYAN "\033[1;5;36m"
-# define ANSI_BOLD_BLINK_MAGENTA "\033[1;5;35m"
+
 # define ANSI_BOLD_GREEN "\033[1;32m"
+# define ANSI_BOLD_BACK_GREEN "\033[1;42m"
+
 # define ANSI_BOLD_YELLOW "\033[1;33m"
+# define ANSI_BOLD_BACK_YELLOW "\033[1;43m"
+
+# define ANSI_BOLD_BLINK_BACK_BLUE "\033[1;5;44m"
+
+# define ANSI_BOLD_BLINK_CYAN "\033[1;5;36m"
+//# define ANSI_RESET_BOLD_BLINK_CYAN "\033[0;1;5;36m"
+
+# define ANSI_BOLD_BLINK_MAGENTA "\033[1;5;35m"
+# define ANSI_BOLD_BLINK_BACK_MAGENTA "\033[1;5;45m"
+
 # define ANSI_RESET "\033[0m"
 
 /* -----other object-like macros----*/
 # define NUM_OF_MONITORS 1
 
 
-
 /*-----function-like macros----*/
 /* -----function-like macros for debugging----*/
-# define __DEBUG_PRINT_ARGC__(argc) printf("%10s [argc:\033[1;5;36m%3zu\033[m].\n", __func__, argc)
-//# define __DEBUG_PRINT_STR__(str) printf("%10s  [str:%3s].\n", __func__, str)
-//# define __DEBUG_PRINT_CHR__(c) printf("%10s   [c:%3c].\n", __func__, c)
-# define __DEBUG_PRINT_CALLOC_ARGS__(count, size) printf("%10s[count:%zu, size:%zu]\n", __func__, count, size);
-//# define __DEBUG_PRINT_NUM__(num) printf("%10s  [num:\033[1;5;36m%3zu\033[m]\n", __func__, num)
-# define __DEBUG_PRINT_LOOP_COUNT__(loop_count) printf(" %10s  [loop_count:\033[1;5m%8zu\033[m]\n", __func__, loop_count)
+# define __DEBUG_PRINT_ARGC__(argc) printf("%10s [argc:"ANSI_BOLD_BLINK_CYAN"%3zu"ANSI_RESET"].\n", __func__, argc); fflush(stdout)
+# define __DEBUG_PRINT_I__(i) printf("%10s "ANSI_BOLD_BLINK_CYAN"%3d"ANSI_RESET" [i:"ANSI_BOLD_BLINK_CYAN"%3zu"ANSI_RESET"].\n", __func__, __LINE__, i); fflush(stdout)
 
-# define __DEBUG_PRINT_SUCCESS__() printf("<%s success!!>", __func__)
+# define __DEBUG_PRINT_LOOP_COUNT__(loop_count) printf(" %10s  [loop_count:"ANSI_BOLD_BLINK"%8zu"ANSI_RESET"]\n", __func__, loop_count); fflush(stdout)
 
-# define __DEBUG_PRINT_TIME__(usec_time) printf("[usec_time:%lu]\n", usec_time)
+//# define __DEBUG_PRINT_SUCCEEDED__() printf("\n<%s succeeded!!>\n\n", __func__); fflush(stdout)
+//# define __DEBUG_PRINT_FAILED__() printf("\n<%s failed!!>\n\n", __func__); fflush(stdout)
+# define __DEBUG_PRINT_SUCCEEDED__() printf("\n<%s succeeded!!>%d\n\n", __func__, __LINE__); fflush(stdout)
+# define __DEBUG_PRINT_WAITS__() printf("\n<%s still wait!!>%d\n\n", __func__, __LINE__); fflush(stdout)
+# define __DEBUG_PRINT_FAILED__() printf("\n<%s failed!!>%d\n\n", __func__, __LINE__); fflush(stdout)
 
-//# define __DEBUG_PRINT_THREAD_INFO__(own_p) if(own_p->threadrole==ONE_OF_PHILOS) printf("[role:\033[1;5;45mONE_OF_PHILOS\033[m"); else printf("[role:\033[1;5;45mA_MONITOR\033[m"); printf(", philo_id:%zu]\n", own_p->philo_i)
-# define __DEBUG_PRINT_THREAD_INFO__(own_p) if(own_p->threadrole==ONE_OF_PHILOS) printf("[\033[1;5;45mONE_OF_PHILOS\033[m"); else printf("[\033[1;5;45mA_MONITOR\033[m    "); printf("  :%zu,", (own_p)->philo_i); printf("\033[1;5;36m%d\033[m, ", __LINE__); if (!(own_p)->philostat) printf("\033[1;43m%u\033[m", (own_p)->philostat); else printf("\033[1;5;44m%u\033[m", (own_p)->philostat); printf("\n")
+# define __DEBUG_PRINT_NL__() printf("\n\n"); fflush(stdout)
+# define __DEBUG_PRINT_SIMUSTART__() printf("----------Now simulation has started.---------\n"); fflush(stdout)
+# define __DEBUG_PRINT_SIMUEND__() printf("\n----------Now simulation is over.---------\n\n\n\n\n\n"); fflush(stdout)
 
-# define __DEBUG_PRINT_ERRSTAT_AND_SIMUSTAT__(d) if (d->errstat == NO_ERROR) printf("NO_ERROR\n"); else if (d->errstat == ARGC_ERROR) printf("%s", ERRMSG_ARGC); else if (d->errstat == ARGV_ERROR) printf("%s", ERRMSG_ARGV); else if (d->errstat == MALLOC_ERROR) printf("%s", ERRMSG_MALLOC); else if (d->errstat == CALLOC_ARGS_ERROR) printf("%s", ERRMSG_CALLOC_ARGS); else if (d->errstat == THREAD_CREATE_ERROR) printf("%s", ERRMSG_THREAD_CREATE); else if (d->errstat == THREAD_JOIN_ERROR) printf("%s", ERRMSG_THREAD_JOIN); else if (d->errstat == MUTEX_INIT_ERROR) printf("%s", ERRMSG_MUTEX_INIT); else if (d->errstat == MUTEX_DESTROY_ERROR) printf("%s", ERRMSG_MUTEX_DESTROY); else if (d->errstat == MUTEX_LOCK_ERROR) printf("%s", ERRMSG_MUTEX_LOCK); else if (d->errstat == MUTEX_UNLOCK_ERROR) printf("%s", ERRMSG_MUTEX_UNLOCK); else if (d->errstat == GETTIMEOFDAY_ERROR) printf("%s", ERRMSG_GETTIMEOFDAY); else if (d->errstat == USLEEP_ERROR) printf("%s", ERRMSG_USLEEP); if (d->simustat == SIMU_LASTS) printf("SIMU_LASTS\n"); else if (d->simustat == ANY_ERROR_HAS_OCCURRED) printf("ANY_ERROR_HAS_OCCURRED\n"); else if (d->simustat == ANYONE_DIED) printf("ANYONE_DIED\n"); else if (d->simustat == REACHED_N_TIMES_MUST_EAT) printf("REACHED_N_TIMES_MUST_EAT\n")
+# define __DEBUG_PRINT_CUR_TIME__(cur_time) printf("\n[      cur_time :%16lu]\n\n", cur_time); fflush(stdout)
+# define __DEBUG_PRINT_TARGET_TIME__(target_time) printf("\n[   target_time :%16lu]\n\n", target_time); fflush(stdout)
+# define __DEBUG_PRINT_DIFF_TIME__(diff_time) printf("\n[(target-cur)/2 :%16lu]\n\n", diff_time); fflush(stdout)
+# define __DEBUG_PRINT_3_TIME__(cur_time, target_time) printf("\n[      cur_time :%16ld]\n", cur_time); fflush(stdout); printf("[   target_time :%16ld]\n", target_time); fflush(stdout); printf("[(target-cur)/2 :%16ld]\n\n", (target_time - cur_time) / 2); fflush(stdout)
 
-/* ----function-like macro for ringing bell----*/
-//# define __DEBUG_RING_SINGLE_BELL_AND_PRINT_THE_BELL_RANG__(void) printf("\033[x07m"); printf("The bell rang!!\n")
-//# define __DEBUG_PRINT_THE_BELL_RANG__(void) printf("The bell rang!\n")
-//# define __DEBUG_RING_SINGLE_BELL__(void) printf("\033[x07m")
+# define __DEBUG_PRINT_THREAD_INFO__(own_p) if(own_p->threadrole==ONE_OF_PHILOS) printf("["ANSI_BOLD_BLINK_BACK_MAGENTA"ONE_OF_PHILOS"ANSI_RESET); else printf("["ANSI_BOLD_BLINK_BACK_MAGENTA"A_MONITOR"ANSI_RESET"    "); printf("  :%zu,", (own_p)->philo_i); printf(ANSI_BOLD_BLINK_CYAN"%d"ANSI_RESET", ", __LINE__); if (!(own_p)->philostat) printf(ANSI_BOLD_BACK_YELLOW"%u"ANSI_RESET, (own_p)->philostat); else printf(ANSI_BOLD_BLINK_BACK_BLUE"%u"ANSI_RESET, (own_p)->philostat); printf("\n"); fflush(stdout)
+# define __DEBUG_PRINT_ERRSTAT_AND_SIMUSTAT__(d) if (d->errstat == NO_ERROR) printf("NO_ERROR\n"); else if (d->errstat == ARGC_ERROR) printf("%s", ERRMSG_ARGC); else if (d->errstat == ARGV_ERROR) printf("%s", ERRMSG_ARGV); else if (d->errstat == MALLOC_ERROR) printf("%s", ERRMSG_MALLOC); else if (d->errstat == CALLOC_ARGS_ERROR) printf("%s", ERRMSG_CALLOC_ARGS); else if (d->errstat == THREAD_CREATE_ERROR) printf("%s", ERRMSG_THREAD_CREATE); else if (d->errstat == THREAD_JOIN_ERROR) printf("%s", ERRMSG_THREAD_JOIN); else if (d->errstat == MUTEX_INIT_ERROR) printf("%s", ERRMSG_MUTEX_INIT); else if (d->errstat == MUTEX_DESTROY_ERROR) printf("%s", ERRMSG_MUTEX_DESTROY); else if (d->errstat == MUTEX_LOCK_ERROR) printf("%s", ERRMSG_MUTEX_LOCK); else if (d->errstat == MUTEX_UNLOCK_ERROR) printf("%s", ERRMSG_MUTEX_UNLOCK); else if (d->errstat == GETTIMEOFDAY_ERROR) printf("%s", ERRMSG_GETTIMEOFDAY); else if (d->errstat == USLEEP_ERROR) printf("%s", ERRMSG_USLEEP); if (d->simustat == SIMU_LASTS) printf("SIMU_LASTS\n"); else if (d->simustat == ANY_ERROR_HAS_OCCURRED) printf("ANY_ERROR_HAS_OCCURRED\n"); else if (d->simustat == ANYONE_DIED) printf("ANYONE_DIED\n"); else if (d->simustat == REACHED_N_TIMES_MUST_EAT) printf("REACHED_N_TIMES_MUST_EAT\n"); fflush(stdout)
 
-# define __DEBUG__(d) printf("[\033[1;32m%17s\033[5;36m%3d\033[m, \033[;1;33m%-22s\033[m ", __func__, __LINE__, __FILE__); if (!errno) printf("errno:\033[1m%d\033[m ", errno); else printf("errno:\033[1;5;31m%d\033[m ", errno); if (!d->errstat) printf("errstat:\033[1m%d\033[m", d->errstat); else printf("errstat:\033[1;5;31m%d\033[m", d->errstat); printf("]\n")
+# define __DEBUG__(d) printf("["ANSI_BOLD_GREEN"%17s"ANSI_BOLD_BLINK_CYAN"%3d"ANSI_RESET", "ANSI_BOLD_YELLOW"%-22s"ANSI_RESET" ", __func__, __LINE__, __FILE__); if (!errno) printf("errno:"ANSI_BOLD"%d"ANSI_RESET" ", errno); else printf("errno:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET" ", errno); if (!d->errstat) printf("errstat:"ANSI_BOLD"%d"ANSI_RESET, d->errstat); else printf("errstat:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET, d->errstat); printf("]\n"); fflush(stdout)
 
-//# define __DEBUG_THREAD_ROLE_AND_PHILO_ID__(own_p) printf("[\033[1;32m%15s\033[5;36m", __func__, __LINE__); if (!errno) printf(); else printf(); if (!(own_p)->d->errstat) printf(); else printf(); if (!(own_p)->d->simustat) printf(); else printf(); if (!(own_p)->d->philostat) printf(); else printf(); printf("]\n")
+//# define __DEBUG_WITH_OWN_P__(d, own_p) printf("[\033[1;42m%17s\033[0;1;5;36m%3d\033[m, \033[1;33m%-22s\033[m", __func__, __LINE__, __FILE__); if (!errno) printf("errno:\033[1m%d\033[m ", errno); else printf("errno:\033[1;5;31m%d\033[m ", errno); if (!d->errstat) printf("errstat:\033[1m%d\033[m]", d->errstat); else printf("errstat:\033[1;5;31m%d\033[m]", d->errstat); printf("\n"); printf("  [p_i:%zu, philo_i:%zu, rhf_i:%zu, lhf_i:%zu]\n", (own_p)->p_arr_i, (own_p)->philo_i, (own_p)->rhf_i, (own_p)->lhf_i)
+//# define __DEBUG_WITH_OWN_P__(d, own_p) printf("["ANSI_BOLD_BLINK_BACK_GREEN"%17s"ANSI_BOLD_BLINK_CYAN"%3d"ANSI_RESET, ANSI_BOLD_YELLOW"%-22s"ANSI_RESET, __func__, __LINE__, __FILE__); if (!errno) printf("errno:"ANSI_BOLD"%d"ANSI_RESET" ", errno); else printf("errno:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET" ", errno); if (!d->errstat) printf("errstat:"ANSI_BOLD"%d"ANSI_RESET"]", d->errstat); else printf("errstat:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET"]", d->errstat); printf("\n"); printf("  [p_arr_i:%zu, philo_i:%zu, rhf_i:%zu, lhf_i:%zu]\n", (own_p)->p_arr_i, (own_p)->philo_i, (own_p)->rhf_i, (own_p)->lhf_i)
+# define __DEBUG_WITH_OWN_P__(d, own_p) printf("["ANSI_BOLD_GREEN"%17s"ANSI_BOLD_BLINK_CYAN"%3d"ANSI_RESET", "ANSI_BOLD_YELLOW"%-22s"ANSI_RESET, __func__, __LINE__, __FILE__); if (!errno) printf("errno:"ANSI_BOLD"%d"ANSI_RESET" ", errno); else printf("errno:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET" ", errno); if (!d->errstat) printf("errstat:"ANSI_BOLD"%d"ANSI_RESET"]", d->errstat); else printf("errstat:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET"]", d->errstat); printf("\n"); printf("  [p_arr_i:%zu, philo_i:%zu, rhf_i:%zu, lhf_i:%zu]\n", (own_p)->p_arr_i, (own_p)->philo_i, (own_p)->rhf_i, (own_p)->lhf_i); fflush(stdout)
 
-//# define __DEBUG_WITH_OWN_P__(d, own_p) printf("\n[\033[1;42m%-18s\033[0;1;5;36m%3d\033[m, \033[1;33m%-22s\033[m errno:\033[1;31m%d\033[m errstat:\033[1;31m%d\033[m]\n	[p_i:%zu] [philo_i:%zu] [rhf_i:%zu] [lhf_i:%zu]\n\n", __func__, __LINE__, __FILE__, errno, d->errstat, (own_p)->p_arr_i, (own_p)->philo_i, (own_p)->rhf_i, (own_p)->lhf_i)
-# define __DEBUG_WITH_OWN_P__(d, own_p) printf("[\033[1;42m%17s\033[0;1;5;36m%3d\033[m, \033[1;33m%-22s\033[m", __func__, __LINE__, __FILE__); if (!errno) printf("errno:\033[1m%d\033[m ", errno); else printf("errno:\033[1;5;31m%d\033[m ", errno); if (!d->errstat) printf("errstat:\033[1m%d\033[m]", d->errstat); else printf("errstat:\033[1;5;31m%d\033[m]", d->errstat); printf("\n"); printf("  [p_i:%zu, philo_i:%zu, rhf_i:%zu, lhf_i:%zu]\n", (own_p)->p_arr_i, (own_p)->philo_i, (own_p)->rhf_i, (own_p)->lhf_i)
-
-//# define __DEBUG_WITH_INPUT__(d) printf("[\033[1;42m%-18s\033[0;1;5;36m%3d\033[m, \033[1;43m%-22s\033[m errno:\033[1;31m%d\033[m errstat:\033[1;31m%d\033[m]\n	[n_philo:%zu] [time_to_die:%zu] [time_to_eat:%zu] [time_to_sleep:%zu] [n_times_must_eat:%zu]\n", __func__, __LINE__, __FILE__, errno, d->errstat, d->i.n_philo, d->i.time_to_die, d->i.time_to_eat, d->i.time_to_sleep, d->i.n_times_must_eat)
-# define __DEBUG_WITH_INPUT__(d) printf("[\033[1;42m%17s\033[0;1;5;36m%3d\033[m, \033[1;33m%-22s\033[m", __func__, __LINE__, __FILE__); if (!errno) printf("errno:\033[1m%d\033[m ", errno); else printf("errno:\033[1;5;31m%d\033[m ", errno); if (!d->errstat) printf("errstat:\033[1m%d\033[m]", d->errstat); else printf("errstat:\033[1;5;31m%d\033[m]", d->errstat); printf("\n"); printf("  [n_philo:%zu, time_to_die:%zu, time_to_eat:%zu, time_to_sleep:%zu, n_times_must_eat:%zu]\n", d->i.n_philo, d->i.time_to_die, d->i.time_to_eat, d->i.time_to_sleep, d->i.n_times_must_eat)
-
+# define __DEBUG_WITH_INPUT__(d) printf("["ANSI_BOLD_GREEN"%17s"ANSI_BOLD_BLINK_CYAN"%3d"ANSI_RESET", "ANSI_BOLD_YELLOW"%-22s"ANSI_RESET, __func__, __LINE__, __FILE__); if (!errno) printf("errno:"ANSI_BOLD"%d"ANSI_RESET" ", errno); else printf("errno:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET" ", errno); if (!d->errstat) printf("errstat:"ANSI_BOLD"%d"ANSI_RESET"]", d->errstat); else printf("errstat:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET"]", d->errstat); printf("\n"); printf("  [n_philo:%zu, time_to_die:%zu, time_to_eat:%zu, time_to_sleep:%zu, n_times_must_eat:%zu]\n", d->i.n_philo, d->i.time_to_die, d->i.time_to_eat, d->i.time_to_sleep, d->i.n_times_must_eat); fflush(stdout)
 
 
 /*----structures, enumerations, unions and typedefs----*/
@@ -202,8 +213,6 @@ struct s_data
 {
 	t_input				i;
 	t_personal			*p_arr;
-//	p_arr is array of "t_personal" and need to know own "philo_id".
-//	So each philo has to have own "t_personal" data.
 
 	pthread_t			*thread_arr;
 
@@ -216,9 +225,12 @@ struct s_data
 	time_t				start_time;
 };
 
+/*
+	p_arr is array of "t_personal" and need to know own "philo_id".
+	So each philo has to have own "t_personal" data.
+*/
 
-
-/*----prototype declarations of non-static function----*/
+/*----prototype declarations of external linkage functions----*/
 /* -----main.c----*/
 
 /* -----set_data.c----*/

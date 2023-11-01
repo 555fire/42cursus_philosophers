@@ -8,12 +8,8 @@ void	clean_resources(t_data *d)
 	__DEBUG__(d);
 
 	loop_count = 0;
-//	while (1)
-//	while (loop_count <= 10)
-//	while (loop_count <= 10000000)
 	while (loop_count <= 100000000)
 	{
-//		__DEBUG__(d);
 		if (errno || d->errstat || d->simustat)
 		{
 			__DEBUG__(d);
@@ -21,10 +17,7 @@ void	clean_resources(t_data *d)
 		}
 		loop_count++;
 		if (loop_count % 1000000 == 0)
-		{
-//			__DEBUG__(d);
 			__DEBUG_PRINT_LOOP_COUNT__(loop_count);
-		}
 	}
 
 	__DEBUG__(d);
@@ -45,7 +38,6 @@ void	clean_resources(t_data *d)
 	__DEBUG__(d);
 
 	i = 0;
-//	while (!errno && i <= d->i.n_philo)
 	while (!errno && i < d->i.n_philo)
 	{
 		__DEBUG__(d);

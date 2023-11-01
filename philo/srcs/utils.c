@@ -4,7 +4,6 @@ size_t	ph_atoi(char *s, t_data *d)
 {
 	size_t	num;
 
-//	__DEBUG_PRINT_STR__(s);
 	num = 0;
 	while ((*s >= '\t' && *s <= '\r') || *s == ' ')
 		s++;
@@ -12,7 +11,6 @@ size_t	ph_atoi(char *s, t_data *d)
 		s++;
 	while (*s)
 	{
-//		__DEBUG_PRINT_CHR__(*s);
 		if (*s < '0' || *s > '9')
 		{
 			d->errstat = ARGV_ERROR;
@@ -24,9 +22,7 @@ size_t	ph_atoi(char *s, t_data *d)
 			d->errstat = ARGV_ERROR;
 			return (0);
 		}
-//		__DEBUG_PRINT_CHR__(*s);
 		num = num * 10 + (*s - '0');
-//		__DEBUG_PRINT_NUM__(num);
 		s++;
 	}
 	return (num);
@@ -58,7 +54,6 @@ void	*ph_calloc(size_t count, size_t size, t_data *d)
 {
 	void	*mem;
 
-//	__DEBUG_PRINT_CALLOC_ARGS__(count, size);
 	if (!count || !size || size > SIZE_MAX / count)
 	{
 		d->errstat = CALLOC_ARGS_ERROR;
@@ -72,9 +67,7 @@ void	*ph_calloc(size_t count, size_t size, t_data *d)
 		__DEBUG__(d);
 		return (NULL);
 	}
-//	__DEBUG__(d);
 	memset(mem, 0, count * size);
-//	__DEBUG__(d);
 	return (mem);
 }
 
