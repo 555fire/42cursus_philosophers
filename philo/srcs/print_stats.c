@@ -1,8 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_stats.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/17 22:55:04 by mamiyaza          #+#    #+#             */
+/*   Updated: 2023/12/17 23:23:09 by mamiyaza         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo.h"
 
 static void	lock_printstat(t_data *d)
 {
-	printf("The current value of printstat is [%d]. (%s, %d)\n", d->printstat, __func__, __LINE__);
+//	__DEBUG_PRINTSTAT__(d);
+//	printf("The current value of printstat is [%d]. (%s, %d)\n", d->printstat, __func__, __LINE__);
 	while (1)
 	{
 		if (d->printstat == UNLOCKED)
@@ -15,7 +28,8 @@ static void	lock_printstat(t_data *d)
 
 static void	unlock_printstat(t_data *d)
 {
-	printf("The current value of printstat is [%d]. (%s, %d)\n", d->printstat, __func__, __LINE__);
+//	__DEBUG_PRINTSTAT__(d);
+//	printf("The current value of printstat is [%d]. (%s, %d)\n", d->printstat, __func__, __LINE__);
 	if (d->printstat == UNLOCKED)
 	{
 		d->errstat = PRINTSTAT_ERROR;
@@ -24,30 +38,6 @@ static void	unlock_printstat(t_data *d)
 	else
 		d->printstat = UNLOCKED;
 }
-
-// //static t_funcstat	lock_printstat(t_printstat *printstat)
-// static t_funcstat	lock_printstat(t_data *d)
-// {
-// 	if (d->printstat == LOCKED)
-// 	{
-// 		printf("%s", ERRMSG_PRINTSTAT_LOCKED);
-// 		return (FAILED);
-// 	}
-// 	d->printstat = LOCKED;
-// 	return (SUCCEEDED);
-// }
-//
-// //static t_funcstat	unlock_printstat(t_printstat *printstat)
-// static t_funcstat	unlock_printstat(t_data *d)
-// {
-// 	if (d->printstat == UNLOCKED)
-// 	{
-// 		printf("%s", ERRMSG_PRINTSTAT_UNLOCKED);
-// 		return (FAILED);
-// 	}
-// 	d->printstat = UNLOCKED;
-// 	return (SUCCEEDED);
-// }
 
 void	print_errstat_without_d(t_errstat errstat)
 {
@@ -128,8 +118,6 @@ t_funcstat	print_simustat(t_personal *own_p, t_simustat simustat)
 	usec_time = get_usec_time(own_p->d);
 	if (own_p->d->errstat)
 		return (1);
-//	own_p->d->printstat = UNLOCKED;
-//	own_p->d->printstat = LOCKED;
 	lock_printstat(own_p->d);
 	if (simustat == SIMU_LASTS)
 		;
@@ -139,8 +127,6 @@ t_funcstat	print_simustat(t_personal *own_p, t_simustat simustat)
 		printf("%ld%s%zu%s%s",usec_time, SPC, own_p->philo_i, SPC, MSG_DIED);
 	else if (simustat == REACHED_N_TIMES_MUST_EAT)
 		;
-//	own_p->d->printstat = LOCKED;
-//	own_p->d->printstat = UNLOCKED;
 	unlock_printstat(own_p->d);
 	return (0);
 }

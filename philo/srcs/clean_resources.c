@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   clean_resources.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/17 22:54:37 by mamiyaza          #+#    #+#             */
+/*   Updated: 2023/12/17 22:54:38 by mamiyaza         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo.h"
 
 void	clean_resources(t_data *d)
@@ -5,72 +17,49 @@ void	clean_resources(t_data *d)
 	size_t	i;
 	size_t	loop_count;
 
-//	__DEBUG__(d);
-
 	loop_count = 0;
 	while (loop_count <= 100000000)
 	{
 		if (errno || d->errstat || d->simustat)
-		{
-			__DEBUG__(d);
 			break ;
-		}
 		loop_count++;
 		if (loop_count % 1000000 == 0)
 			__DEBUG_PRINT_LOOP_COUNT__(loop_count);
 	}
 
-//	__DEBUG_PRINT_NL__();
-
 	i = 0;
 	while (!errno && d->errstat > THREAD_CREATE_ERROR && i < d->i.n_philo)
 	{
-		__DEBUG__(d);
 		if (pthread_join(d->thread_arr[i], NULL))
 		{
-			__DEBUG__(d);
 			d->errstat = THREAD_JOIN_ERROR;
 			break ;
 		}
 		i++;
 	}
 
-//	__DEBUG_PRINT_NL__();
-
 	i = 0;
 	while (!errno && i < d->i.n_philo)
 	{
-//		__DEBUG__(d);
-//		printf("The value of \"i\" is [%zu]\n", i);
 		if (pthread_mutex_destroy(&d->mutexfork_arr[i]))
 		{
 			perror(ERRMSG_MUTEX_DESTROY);
-//			__DEBUG__(d);
 			d->errstat = MUTEX_DESTROY_ERROR;
 			break ;
 		}
 		i++;
 	}
-	printf("The end value of \"i\" is [%zu]\n", i);
-
-//	__DEBUG_PRINT_NL__();
+//	printf("The end value of \"i\" is [%zu]\n", i);
 
 	if (errno || d->errstat)
 		print_errstat(d, d->errstat);
 
-//	__DEBUG_PRINT_NL__();
-
 	if (errno != EINVAL && !d->errstat)
 	{
-//		__DEBUG__(d);
 		free_safely(d->p_arr);
 		free_safely(d->thread_arr);
 		free_safely(d->mutexfork_arr);
 		free_safely(d);
-//		__DEBUG__(d);
 	}
-
 	__DEBUG__(d);
-
-	return ;
 }

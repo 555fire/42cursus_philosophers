@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   set_data.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/17 22:55:08 by mamiyaza          #+#    #+#             */
+/*   Updated: 2023/12/17 22:55:09 by mamiyaza         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo.h"
 
 static t_funcstat	valid_args(t_data *d, size_t argc, char **argv)
@@ -7,6 +19,7 @@ static t_funcstat	valid_args(t_data *d, size_t argc, char **argv)
 	if (argc != 5 && argc != 6)
 	{
 		d->errstat = ARGC_ERROR;
+		print_errstat(d, ARGC_ERROR);
 		return (1);
 	}
 	i = 1;
@@ -30,7 +43,6 @@ static t_funcstat	set_args(t_data *d, size_t argc, char **argv)
 		d->i.n_times_must_eat = ph_atoi(argv[5], d);
 	else
 		d->i.n_times_must_eat = INT_MAX;
-//	__DEBUG_WITH_INPUT__(d);
 	return (0);
 }
 
@@ -42,12 +54,9 @@ t_data	*set_data(t_data *d, size_t argc, char **argv)
 	if (errno)
 		return (d);
 
-//	__DEBUG_PRINT_ARGC__(argc);
-
 	if (valid_args(d, argc, argv))
 		return (d);
 	set_args(d, argc, argv);
-//	__DEBUG_WITH_INPUT__(d);
 
 	d->p_arr = NULL;
 	d->p_arr = ph_calloc(d->i.n_philo + NUM_OF_MONITORS, sizeof(t_personal), d);
@@ -62,12 +71,7 @@ t_data	*set_data(t_data *d, size_t argc, char **argv)
 	d->mutexfork_arr = NULL;
 	d->mutexfork_arr = ph_calloc(d->i.n_philo, sizeof(pthread_mutex_t), d);
 	if (d->errstat)
-	{
-		__DEBUG__(d);
 		return (d);
-	}
-
-//	__DEBUG_PRINT_NL__();
 
 	i = 0;
 	while (i < d->i.n_philo + NUM_OF_MONITORS)
@@ -75,11 +79,8 @@ t_data	*set_data(t_data *d, size_t argc, char **argv)
 		d->p_arr[i].p_arr_i = i;
 		if (i < d->i.n_philo)
 			d->p_arr[i].philo_i = i + 1;
-//		__DEBUG_WITH_OWN_P__(d, &d->p_arr[i]);
 		i++;
 	}
-
-//	__DEBUG_PRINT_NL__();
 
 	i = 0;
 	while (i < d->i.n_philo + NUM_OF_MONITORS)
@@ -89,11 +90,8 @@ t_data	*set_data(t_data *d, size_t argc, char **argv)
 			d->p_arr[i].lhf_i = i + 1;
 		else
 			d->p_arr[i].lhf_i = 0;
-//		__DEBUG_WITH_OWN_P__(d, &d->p_arr[i]);
 		i++;
 	}
-
-//	__DEBUG_PRINT_NL__();
 
 	i = 0;
 	while (i < d->i.n_philo)
@@ -101,7 +99,7 @@ t_data	*set_data(t_data *d, size_t argc, char **argv)
 		if (pthread_mutex_init(&d->mutexfork_arr[i], NULL))
 		{
 			d->errstat = MUTEX_INIT_ERROR;
-			__DEBUG__(d);
+			print_errstat(d, MUTEX_INIT_ERROR);
 			break ;
 		}
 		i++;
@@ -119,8 +117,8 @@ t_data	*set_data(t_data *d, size_t argc, char **argv)
 */
 
 /*
- Relations of philo ids and fork ids.
- Case of n_philo is 5.
+	Relations of philo ids and fork ids.
+	Case of n_philo is 5.
 (philo_i - 1):  0 1 2 3 4
       i      :  0 1 2 3 4
    philo_i   :  1 2 3 4 5

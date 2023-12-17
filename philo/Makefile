@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/12/17 22:55:15 by mamiyaza          #+#    #+#              #
+#    Updated: 2023/12/17 22:55:16 by mamiyaza         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME := philo
 
 SRCDIR := srcs/
@@ -21,7 +33,7 @@ CFLAGS := -Wall -Wextra -Werror -pthread
 MKDIR := mkdir -p
 RM := rm -rf
 
-# object-like macros for test cases
+# macros for test cases
 ARGS_FOR_TEST0 := 4 410 200 200 5
 
 ARGS_FOR_TEST1 := 4 410 200 200
@@ -46,6 +58,7 @@ ARGS_FOR_ERROR_TEST15 := 1 1 1 0
 ARGS_FOR_ERROR_TEST16 := 1 1 1 1 0
 
 
+# rules for Make
 $(NAME) : $(OBJDIR) $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS)
 
@@ -101,25 +114,5 @@ test_e:
 	./$(NAME) $(ARGS_FOR_ERROR_TEST15)
 	./$(NAME) $(ARGS_FOR_ERROR_TEST16)
 	make fclean
-
-# test_e:
-# 	make re -s
-# 	./$(NAME)
-# 	./$(NAME) 1
-# 	./$(NAME) 1 1
-# 	./$(NAME) 1 1 1
-# 	./$(NAME) 1 1 1 1
-# 	./$(NAME) 1 1 1 1 1
-# 	./$(NAME) -1
-# 	./$(NAME) 1 -1
-# 	./$(NAME) 1 1 -1
-# 	./$(NAME) 1 1 1 -1
-# 	./$(NAME) 1 1 1 1 -1
-# 	./$(NAME) 0
-# 	./$(NAME) 1 0
-# 	./$(NAME) 1 1 0
-# 	./$(NAME) 1 1 1 0
-# 	./$(NAME) 1 1 1 1 0
-# 	make fclean
 
 .PHONY: all clean fclean re test0 test1

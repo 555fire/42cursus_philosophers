@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/17 22:54:29 by mamiyaza          #+#    #+#             */
+/*   Updated: 2023/12/17 23:21:46 by mamiyaza         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -15,7 +27,6 @@
 							"pthread_mutex_destroy".		*/
 # include <stdatomic.h>	/*	header for "_Atomic".			*/
 
-
 /*----macroinstructions(macros)----*/
 /* -----function-like macros----*/
 /*  -----function-like macros for debugging----*/
@@ -28,7 +39,7 @@
 # define __DEBUG_PRINT_WAITS__() printf("\n<%s is still waiting...>%d\n", __func__, __LINE__); fflush(stdout)
 # define __DEBUG_PRINT_FAILED__() printf("\n<%s failed...>%d\n", __func__, __LINE__); fflush(stdout)
 
-# define __DEBUG_PRINT_NL__() printf("\n\n"); fflush(stdout)
+// # define __DEBUG_PRINT_NL__() printf("\n\n"); fflush(stdout)
 # define __DEBUG_PRINT_SIMUSTART__() printf("----------Now simulation has started.---------\n"); fflush(stdout)
 # define __DEBUG_PRINT_SIMUEND__() printf("----------Now simulation is over.---------\n\n"); fflush(stdout)
 
@@ -45,6 +56,8 @@
 # define __DEBUG_WITH_OWN_P__(d, own_p) printf("["ANSI_BOLD_GREEN"%17s"ANSI_BOLD_CYAN"%3d"ANSI_RESET", "ANSI_BOLD_YELLOW"%-22s"ANSI_RESET, __func__, __LINE__, __FILE__); fflush(stdout); if (!errno) {printf("errno:"ANSI_BOLD"%d"ANSI_RESET" ", errno); fflush(stdout);} else {printf("errno:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET" ", errno); fflush(stdout);} if (!d->errstat) {printf("errstat:"ANSI_BOLD"%d"ANSI_RESET"]", d->errstat); fflush(stdout);} else {printf("errstat:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET"]", d->errstat); fflush(stdout);} printf("\n  [p_arr_i:%zu, philo_i:%zu, rhf_i:%zu, lhf_i:%zu]\n", (own_p)->p_arr_i, (own_p)->philo_i, (own_p)->rhf_i, (own_p)->lhf_i); fflush(stdout)
 
 # define __DEBUG_WITH_INPUT__(d) printf("["ANSI_BOLD_GREEN"%17s"ANSI_BOLD_CYAN"%3d"ANSI_RESET", "ANSI_BOLD_YELLOW"%-22s"ANSI_RESET, __func__, __LINE__, __FILE__); fflush(stdout); if (!errno) {printf("errno:"ANSI_BOLD"%d"ANSI_RESET" ", errno); fflush(stdout);} else {printf("errno:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET" ", errno); fflush(stdout);} if (!d->errstat) {printf("errstat:"ANSI_BOLD"%d"ANSI_RESET"]", d->errstat); fflush(stdout);} else {printf("errstat:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET"]", d->errstat); fflush(stdout);} printf("\n  [n_philo:%zu, time_to_die:%zu, time_to_eat:%zu, time_to_sleep:%zu, n_times_must_eat:%zu]\n", d->i.n_philo, d->i.time_to_die, d->i.time_to_eat, d->i.time_to_sleep, d->i.n_times_must_eat); fflush(stdout)
+
+# define __DEBUG_PRINTSTAT__(d) printf("The current value of printstat is [%d]. (%s, %d)\n", d->printstat, __func__, __LINE__)
 
 /* -----object-like macros----*/
 
@@ -75,16 +88,15 @@
 # define ANSI_RESET "\033[0m"
 
 /*  -----object-like macros for error messages----*/
-# define ERRMSG_ARGC ANSI_BOLD_RED"USAGE:\n\
-This executable file \"philo\" takes 4 or 5 arguments.\n\
-Each arguments refers \"number_of_philosophers\", \
-\"time_to_die\"(in milliseconds), \"time_to_eat\"(in milliseconds) and \
-\"time_to_sleep\"(in milliseconds). If you add 5th argument, \
-it represents \"number_of_times_each_philosopher_must_eat\".\n"ANSI_RESET
-# define ERRMSG_ARGV "USAGE:\n\
-The range of possible values is as follows:\
-\"number_of_philo\" : integer from 1 to 200.\n\
-\tother arguments : integer from 60 to INT_MAX\n"
+# define ERRMSG_ARGC "\033[1;31mUSAGE:\n\
+\tThis executable file \"philo\" takes 4 or 5 arguments.\n\
+\tEach arguments refers \"number_of_philosophers\", \"time_to_die\"(in milliseconds),\n\
+\t\"time_to_eat\"(in milliseconds) and \"time_to_sleep\"(in milliseconds).\n\
+\tIf you add 5th argument, it represents \"number_of_times_each_philosopher_must_eat\".\n\033[0m"
+# define ERRMSG_ARGV "\033[1;31mUSAGE:\n\
+\tThe range of possible values is as follows:\n\
+\t\"number_of_philo\" : integer from 1 to 200.\n\
+\tother arguments : integer from 60 to INT_MAX\n\033[m"
 # define ERRMSG_CALLOC_ARGS "\terror: values of arguments of calloc is invalid!\n"
 # define ERRMSG_MALLOC "\tfatal error: malloc failed.\n"
 # define ERRMSG_THREAD_CREATE "\tfatal error: pthread_create failed.\n"
@@ -96,8 +108,6 @@ The range of possible values is as follows:\
 # define ERRMSG_THREAD_JOIN "\tfatal error: pthread_join failed.\n"
 # define ERRMSG_MUTEX_DESTROY "\tfatal error: pthread_mutex_destroy failed.\n"
 # define ERRMSG_PRINTSTAT "\terror: printstat\n"
-//# define ERRMSG_PRINTSTAT_LOCKED "\terror: printstat is already locked!\n"
-//# define ERRMSG_PRINTSTAT_UNLOCKED "\terror: printstat is already unlocked!\n"
 
 /*  -----object-like macros for standard messages----*/
 # define SPC " "
@@ -109,7 +119,6 @@ The range of possible values is as follows:\
 
 /*  -----other object-like macros----*/
 # define NUM_OF_MONITORS 1
-
 
 /*----structures, enumerations, unions and typedefs----*/
 typedef enum e_errstat				t_errstat;
@@ -252,7 +261,7 @@ t_funcstat	wait_precise_time(t_data *d, time_t target_time);
 void		create_threads(t_data *d);
 
 /* -----philo_routine.c----*/
-void 		*philo_routine(void *passed_arg_in_the_form_of_void_ptr);
+void		*philo_routine(void *passed_arg_in_the_form_of_void_ptr);
 
 /* -----monitor_routine.c----*/
 void		*monitor_routine(void *passed_arg_in_the_form_of_void_ptr);

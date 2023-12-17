@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/17 22:54:51 by mamiyaza          #+#    #+#             */
+/*   Updated: 2023/12/17 22:54:52 by mamiyaza         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo.h"
 
 int	main(int argc, char **argv)
@@ -5,21 +17,11 @@ int	main(int argc, char **argv)
 	t_data	*d;
 
 	__DEBUG_PRINT_SIMUSTART__();
-
 	d = NULL;
 	d = set_data(d, argc, argv);
-
-//	__DEBUG__(d);
-
 	create_threads(d);
-
-//	__DEBUG__(d);
-
 	clean_resources(d);
-
-//	__DEBUG__(d);
 	__DEBUG_PRINT_SIMUEND__();
-
 	return (0);
 }
 

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   monitor_routine.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/17 22:54:55 by mamiyaza          #+#    #+#             */
+/*   Updated: 2023/12/17 22:54:56 by mamiyaza         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo.h"
 
 static int	have_everyone_reached_n_times_must_eat(t_personal *own_p)
@@ -44,29 +56,23 @@ void	*monitor_routine(void *passed_arg_in_the_form_of_void_ptr)
 	t_personal	*own_p;
 
 	own_p = passed_arg_in_the_form_of_void_ptr;
-
 	__DEBUG_PRINT_THREAD_INFO__(own_p);
-//	__DEBUG_WITH_OWN_P__(own_p->d, own_p);
-
 	if (own_p->d->errstat)
 		return (NULL);
-	__DEBUG__(own_p->d);
+//	__DEBUG__(own_p->d);
 	if (wait_precise_time(own_p->d, own_p->d->start_time))
-	{
-		__DEBUG__(own_p->d);
 		return (NULL);
-	}
-	__DEBUG__(own_p->d);
+//	__DEBUG__(own_p->d);
 	while (1)
 	{
-		__DEBUG__(own_p->d);
+//		__DEBUG__(own_p->d);
 		if (have_everyone_reached_n_times_must_eat(own_p) == HAS_REACHED)
 			break ;
-		__DEBUG__(own_p->d);
+//		__DEBUG__(own_p->d);
 		if (did_anyone_died(own_p) == DIED_OR_AN_ERROR_HAS_OCCURRED)
 			break ;
-		__DEBUG__(own_p->d);
+//		__DEBUG__(own_p->d);
 	}
-	__DEBUG__(own_p->d);
+//	__DEBUG__(own_p->d);
 	return (NULL);
 }

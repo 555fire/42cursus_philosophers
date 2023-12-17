@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main_test_gettimeofday.c                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/17 23:05:47 by mamiyaza          #+#    #+#             */
+/*   Updated: 2023/12/17 23:13:14 by mamiyaza         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,14 +45,14 @@ static void	do_gettimeofday_and_print(void)
 	}
 	printf("tv_sec :[%lu]\n", tv.tv_sec);
 	printf("tv_usec:[%d]\n\n", tv.tv_usec);
-	// printf("tv_usec:[%lu]\n\n", tv.tv_usec);
 	tv1 = tv.tv_sec * 1000000 + tv.tv_usec;
 	tv2 = tv.tv_sec * 1000 + tv.tv_usec / 1000;
-	// printf("tv in microsec:[%lu]\n", tv.tv_sec * 1000000 + tv.tv_usec);
-	// printf("tv in millisec:[%lu]\n", tv.tv_sec * 1000 + tv.tv_usec / 1000);
 	printf("tv in microsec:[%lu]\n", tv1);
 	printf("tv in millisec:[%lu]\n", tv2);
 }
+	// printf("tv_usec:[%lu]\n\n", tv.tv_usec);
+	// printf("tv in microsec:[%lu]\n", tv.tv_sec * 1000000 + tv.tv_usec);
+	// printf("tv in millisec:[%lu]\n", tv.tv_sec * 1000 + tv.tv_usec / 1000);
 
 int	main(int argc, char **argv)
 {

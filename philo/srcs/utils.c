@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/17 22:55:12 by mamiyaza          #+#    #+#             */
+/*   Updated: 2023/12/17 22:55:13 by mamiyaza         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo.h"
 
 size_t	ph_atoi(char *s, t_data *d)
@@ -14,12 +26,14 @@ size_t	ph_atoi(char *s, t_data *d)
 		if (*s < '0' || *s > '9')
 		{
 			d->errstat = ARGV_ERROR;
+			print_errstat(d, ARGV_ERROR);
 			return (0);
 		}
 		if (num > SIZE_MAX / 10 || (num == SIZE_MAX / 10 &&
 				(unsigned long)(*s - '0') >= SIZE_MAX % 10))
 		{
 			d->errstat = ARGV_ERROR;
+			print_errstat(d, ARGV_ERROR);
 			return (0);
 		}
 		num = num * 10 + (*s - '0');
@@ -57,14 +71,14 @@ void	*ph_calloc(size_t count, size_t size, t_data *d)
 	if (!count || !size || size > SIZE_MAX / count)
 	{
 		d->errstat = CALLOC_ARGS_ERROR;
-		__DEBUG__(d);
+		print_errstat(d, CALLOC_ARGS_ERROR);
 		return (NULL);
 	}
 	mem = malloc(count * size);
 	if (!mem)
 	{
 		d->errstat = MALLOC_ERROR;
-		__DEBUG__(d);
+		print_errstat(d, MALLOC_ERROR);
 		return (NULL);
 	}
 	memset(mem, 0, count * size);
