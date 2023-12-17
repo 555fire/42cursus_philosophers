@@ -93,7 +93,7 @@ t_data	*set_data(t_data *d, size_t argc, char **argv)
 		i++;
 	}
 
-	__DEBUG_PRINT_NL__();
+//	__DEBUG_PRINT_NL__();
 
 	i = 0;
 	while (i < d->i.n_philo)

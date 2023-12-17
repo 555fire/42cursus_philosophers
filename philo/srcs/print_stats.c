@@ -1,5 +1,54 @@
 #include "../includes/philo.h"
 
+static void	lock_printstat(t_data *d)
+{
+	printf("The current value of printstat is [%d]. (%s, %d)\n", d->printstat, __func__, __LINE__);
+	while (1)
+	{
+		if (d->printstat == UNLOCKED)
+		{
+			d->printstat = LOCKED;
+			break ;
+		}
+	}
+}
+
+static void	unlock_printstat(t_data *d)
+{
+	printf("The current value of printstat is [%d]. (%s, %d)\n", d->printstat, __func__, __LINE__);
+	if (d->printstat == UNLOCKED)
+	{
+		d->errstat = PRINTSTAT_ERROR;
+		printf(ERRMSG_PRINTSTAT);
+	}
+	else
+		d->printstat = UNLOCKED;
+}
+
+// //static t_funcstat	lock_printstat(t_printstat *printstat)
+// static t_funcstat	lock_printstat(t_data *d)
+// {
+// 	if (d->printstat == LOCKED)
+// 	{
+// 		printf("%s", ERRMSG_PRINTSTAT_LOCKED);
+// 		return (FAILED);
+// 	}
+// 	d->printstat = LOCKED;
+// 	return (SUCCEEDED);
+// }
+//
+// //static t_funcstat	unlock_printstat(t_printstat *printstat)
+// static t_funcstat	unlock_printstat(t_data *d)
+// {
+// 	if (d->printstat == UNLOCKED)
+// 	{
+// 		printf("%s", ERRMSG_PRINTSTAT_UNLOCKED);
+// 		return (FAILED);
+// 	}
+// 	d->printstat = UNLOCKED;
+// 	return (SUCCEEDED);
+// }
+
 void	print_errstat_without_d(t_errstat errstat)
 {
 	if (errstat == ARGC_ERROR)
@@ -15,7 +64,7 @@ void	print_errstat_without_d(t_errstat errstat)
 
 void	print_errstat(t_data *d, t_errstat errstat)
 {
-	d->printstat = UNLOCKED;
+	lock_printstat(d);
 	if (errstat == NO_ERROR)
 		;
 	else if (errstat == ARGC_ERROR)
@@ -42,7 +91,7 @@ void	print_errstat(t_data *d, t_errstat errstat)
 		printf("%s", ERRMSG_GETTIMEOFDAY);
 	else if (errstat == USLEEP_ERROR)
 		printf("%s", ERRMSG_USLEEP);
-	d->printstat = LOCKED;
+	unlock_printstat(d);
 	return ;
 }
 
@@ -55,7 +104,7 @@ t_funcstat	print_philostat(t_personal *own_p, t_philostat philostat)
 	if (own_p->d->errstat)
 		return (1);
 	relative_usec_time = usec_time - own_p->d->start_time;
-	own_p->d->printstat = UNLOCKED;
+	lock_printstat(own_p->d);
 	if (philostat == WAITING_FOR_TAKINGFORK)
 		;
 	else if (philostat == HASTOOKFORK)
@@ -68,7 +117,7 @@ t_funcstat	print_philostat(t_personal *own_p, t_philostat philostat)
 		printf("%ld%s%zu%s%s", relative_usec_time, SPC, own_p->philo_i, SPC, MSG_THINKING);
 	else if (philostat == DEAD)
 		printf("%ld%s%zu%s%s", relative_usec_time, SPC, own_p->philo_i, SPC, MSG_DIED);
-	own_p->d->printstat = LOCKED;
+	unlock_printstat(own_p->d);
 	return (0);
 }
 
@@ -79,7 +128,9 @@ t_funcstat	print_simustat(t_personal *own_p, t_simustat simustat)
 	usec_time = get_usec_time(own_p->d);
 	if (own_p->d->errstat)
 		return (1);
-	own_p->d->printstat = UNLOCKED;
+//	own_p->d->printstat = UNLOCKED;
+//	own_p->d->printstat = LOCKED;
+	lock_printstat(own_p->d);
 	if (simustat == SIMU_LASTS)
 		;
 	else if (simustat == ANY_ERROR_HAS_OCCURRED)
@@ -88,6 +139,8 @@ t_funcstat	print_simustat(t_personal *own_p, t_simustat simustat)
 		printf("%ld%s%zu%s%s",usec_time, SPC, own_p->philo_i, SPC, MSG_DIED);
 	else if (simustat == REACHED_N_TIMES_MUST_EAT)
 		;
-	own_p->d->printstat = LOCKED;
+//	own_p->d->printstat = LOCKED;
+//	own_p->d->printstat = UNLOCKED;
+	unlock_printstat(own_p->d);
 	return (0);
 }

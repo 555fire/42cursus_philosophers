@@ -5,7 +5,7 @@ void	clean_resources(t_data *d)
 	size_t	i;
 	size_t	loop_count;
 
-	__DEBUG__(d);
+//	__DEBUG__(d);
 
 	loop_count = 0;
 	while (loop_count <= 100000000)
@@ -20,7 +20,7 @@ void	clean_resources(t_data *d)
 			__DEBUG_PRINT_LOOP_COUNT__(loop_count);
 	}
 
-	__DEBUG__(d);
+//	__DEBUG_PRINT_NL__();
 
 	i = 0;
 	while (!errno && d->errstat > THREAD_CREATE_ERROR && i < d->i.n_philo)
@@ -35,36 +35,39 @@ void	clean_resources(t_data *d)
 		i++;
 	}
 
-	__DEBUG__(d);
+//	__DEBUG_PRINT_NL__();
 
 	i = 0;
 	while (!errno && i < d->i.n_philo)
 	{
-		__DEBUG__(d);
+//		__DEBUG__(d);
+//		printf("The value of \"i\" is [%zu]\n", i);
 		if (pthread_mutex_destroy(&d->mutexfork_arr[i]))
 		{
-			__DEBUG__(d);
+			perror(ERRMSG_MUTEX_DESTROY);
+//			__DEBUG__(d);
 			d->errstat = MUTEX_DESTROY_ERROR;
 			break ;
 		}
 		i++;
 	}
+	printf("The end value of \"i\" is [%zu]\n", i);
 
-	__DEBUG__(d);
+//	__DEBUG_PRINT_NL__();
 
 	if (errno || d->errstat)
 		print_errstat(d, d->errstat);
 
-	__DEBUG__(d);
+//	__DEBUG_PRINT_NL__();
 
 	if (errno != EINVAL && !d->errstat)
 	{
-		__DEBUG__(d);
+//		__DEBUG__(d);
 		free_safely(d->p_arr);
 		free_safely(d->thread_arr);
 		free_safely(d->mutexfork_arr);
 		free_safely(d);
-		__DEBUG__(d);
+//		__DEBUG__(d);
 	}
 
 	__DEBUG__(d);

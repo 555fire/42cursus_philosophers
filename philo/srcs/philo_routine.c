@@ -2,6 +2,7 @@
 
 static t_funcstat	try_to_take_forks(t_personal *own_p)
 {
+	__DEBUG__(own_p->d);
 	if (own_p->philo_i % 2 == 0)
 	{
 		if (wait_precise_time(own_p->d, 100))
@@ -27,6 +28,7 @@ static t_funcstat	try_to_take_forks(t_personal *own_p)
 
 static t_funcstat	philo_eat(t_personal *own_p)
 {
+	__DEBUG__(own_p->d);
 	if (try_to_take_forks(own_p))
 		return (1);
 	if (wait_precise_time(own_p->d, own_p->d->i.time_to_eat))
@@ -46,6 +48,7 @@ static t_funcstat	philo_eat(t_personal *own_p)
 
 static t_funcstat	philo_sleep(t_personal *own_p)
 {
+	__DEBUG__(own_p->d);
 	print_philostat(own_p, SLEEPING);
 	if (wait_precise_time(own_p->d, own_p->d->i.time_to_sleep))
 		return (1);
@@ -59,7 +62,7 @@ void	*philo_routine(void *passed_arg_in_the_form_of_void_ptr)
 	own_p = passed_arg_in_the_form_of_void_ptr;
 
 	__DEBUG_PRINT_THREAD_INFO__(own_p);
-	__DEBUG_WITH_OWN_P__(own_p->d, own_p);
+//	__DEBUG_WITH_OWN_P__(own_p->d, own_p);
 
 	if (wait_precise_time(own_p->d, own_p->d->start_time))
 	{
