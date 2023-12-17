@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:00 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/17 22:55:01 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 00:20:52 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,20 +74,16 @@ void	*philo_routine(void *passed_arg_in_the_form_of_void_ptr)
 	own_p = passed_arg_in_the_form_of_void_ptr;
 	__DEBUG_PRINT_THREAD_INFO__(own_p);
 	if (wait_precise_time(own_p->d, own_p->d->start_time))
-//		__DEBUG__(own_p->d);
 		return (NULL);
-//	__DEBUG__(own_p->d);
+	__DEBUG__(own_p->d);
 	while (1)
 	{
-//		__DEBUG__(own_p->d);
 		if (philo_eat(own_p))
 			break ;
-//		__DEBUG__(own_p->d);
 		if (philo_sleep(own_p))
 			break ;
-//		__DEBUG__(own_p->d);
 	}
-//	__DEBUG__(own_p->d);
+	__DEBUG__(own_p->d);
 	return (NULL);
 }
 

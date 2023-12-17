@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:12 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/17 22:55:13 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 00:18:19 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ size_t	ph_atoi(char *s, t_data *d)
 			print_errstat(d, ARGV_ERROR);
 			return (0);
 		}
-		if (num > SIZE_MAX / 10 || (num == SIZE_MAX / 10 &&
-				(unsigned long)(*s - '0') >= SIZE_MAX % 10))
+		if (num > SIZE_MAX / 10 || (num == SIZE_MAX / 10
+				&& (unsigned long)(*s - '0') >= SIZE_MAX % 10))
 		{
 			d->errstat = ARGV_ERROR;
 			print_errstat(d, ARGV_ERROR);

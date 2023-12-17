@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:37 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/17 22:54:38 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 00:21:20 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,17 @@
 void	clean_resources(t_data *d)
 {
 	size_t	i;
-	size_t	loop_count;
+	// size_t	loop_count;
 
-	loop_count = 0;
-	while (loop_count <= 100000000)
-	{
-		if (errno || d->errstat || d->simustat)
-			break ;
-		loop_count++;
-		if (loop_count % 1000000 == 0)
-			__DEBUG_PRINT_LOOP_COUNT__(loop_count);
-	}
+	// loop_count = 0;
+	// while (loop_count <= 100000000)
+	// {
+	// 	if (errno || d->errstat || d->simustat)
+	// 		break ;
+	// 	loop_count++;
+	// 	if (loop_count % 1000000 == 0)
+	// 		__DEBUG_PRINT_LOOP_COUNT__(loop_count);
+	// }
 
 	i = 0;
 	while (!errno && d->errstat > THREAD_CREATE_ERROR && i < d->i.n_philo)
@@ -49,11 +49,11 @@ void	clean_resources(t_data *d)
 		}
 		i++;
 	}
-//	printf("The end value of \"i\" is [%zu]\n", i);
 
-	if (errno || d->errstat)
-		print_errstat(d, d->errstat);
+	// if (errno || d->errstat)
+	// 	print_errstat(d, d->errstat);
 
+	__DEBUG__(d);
 	if (errno != EINVAL && !d->errstat)
 	{
 		free_safely(d->p_arr);

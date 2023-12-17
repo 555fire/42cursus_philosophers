@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:29 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/17 23:21:46 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/17 23:56:02 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,34 +30,21 @@
 /*----macroinstructions(macros)----*/
 /* -----function-like macros----*/
 /*  -----function-like macros for debugging----*/
-# define __DEBUG_PRINT_ARGC__(argc) printf("%10s [argc:"ANSI_BOLD_CYAN"%3zu"ANSI_RESET"].\n", __func__, argc); fflush(stdout)
-# define __DEBUG_PRINT_I__(i) printf("%10s "ANSI_BOLD_CYAN"%3d"ANSI_RESET" [i:"ANSI_BOLD_CYAN"%3zu"ANSI_RESET"].\n", __func__, __LINE__, i); fflush(stdout)
-
 # define __DEBUG_PRINT_LOOP_COUNT__(loop_count) printf(" %10s  [loop_count:"ANSI_BOLD_BLINK"%8zu"ANSI_RESET"]\n", __func__, loop_count); fflush(stdout)
 
 # define __DEBUG_PRINT_SUCCEEDED__() printf("\n<%s succeeded!>%d\n", __func__, __LINE__); fflush(stdout)
 # define __DEBUG_PRINT_WAITS__() printf("\n<%s is still waiting...>%d\n", __func__, __LINE__); fflush(stdout)
 # define __DEBUG_PRINT_FAILED__() printf("\n<%s failed...>%d\n", __func__, __LINE__); fflush(stdout)
 
-// # define __DEBUG_PRINT_NL__() printf("\n\n"); fflush(stdout)
 # define __DEBUG_PRINT_SIMUSTART__() printf("----------Now simulation has started.---------\n"); fflush(stdout)
 # define __DEBUG_PRINT_SIMUEND__() printf("----------Now simulation is over.---------\n\n"); fflush(stdout)
 
-# define __DEBUG_PRINT_CUR_TIME__(cur_time) printf("[      cur_time :%16ld]\n", cur_time); fflush(stdout)
 # define __DEBUG_PRINT_TARGET_TIME__(target_time) printf("[   target_time :%16ld]\n", target_time); fflush(stdout)
 # define __DEBUG_PRINT_DIFF_TIME__(cur_time, target_time) printf("[(target-cur)/2 :%16ld]%s|%d\n", target_time - cur_time, __func__, __LINE__); fflush(stdout)
-# define __DEBUG_PRINT_3_TIME__(cur_time, target_time) printf("\n[      cur_time :%16ld]\n", cur_time); fflush(stdout); printf("[   target_time :%16ld]\n", target_time); fflush(stdout); printf("[(target-cur)/2 :%16ld]\n", (target_time - cur_time) / 2); fflush(stdout)
 
 # define __DEBUG_PRINT_THREAD_INFO__(own_p) printf("\n"); fflush(stdout); if(own_p->threadrole==ONE_OF_PHILOS) {printf("["ANSI_BOLD_BACK_MAGENTA"ONE_OF_PHILOS"ANSI_RESET); fflush(stdout);} else {printf("["ANSI_BOLD_BACK_MAGENTA"A_MONITOR"ANSI_RESET"    "); fflush(stdout);} printf("  :%zu,", (own_p)->philo_i); fflush(stdout); printf(ANSI_BOLD_CYAN"%d"ANSI_RESET", ", __LINE__); fflush(stdout); if (!(own_p)->philostat) {printf(ANSI_BOLD_BACK_YELLOW"%u"ANSI_RESET, (own_p)->philostat); fflush(stdout);} else {printf(ANSI_BOLD_BLINK_BACK_BLUE"%u"ANSI_RESET, (own_p)->philostat); fflush(stdout);} printf("\n\n"); fflush(stdout)
-# define __DEBUG_PRINT_ERRSTAT_AND_SIMUSTAT__(d) if (d->errstat == NO_ERROR) {printf("NO_ERROR\n"); fflush(stdout);} else if (d->errstat == ARGC_ERROR) {printf("%s", ERRMSG_ARGC); fflush(stdout);} else if (d->errstat == ARGV_ERROR) {printf("%s", ERRMSG_ARGV); fflush(stdout);} else if (d->errstat == MALLOC_ERROR) {printf("%s", ERRMSG_MALLOC); fflush(stdout);} else if (d->errstat == CALLOC_ARGS_ERROR) {printf("%s", ERRMSG_CALLOC_ARGS); fflush(stdout);} else if (d->errstat == THREAD_CREATE_ERROR) {printf("%s", ERRMSG_THREAD_CREATE); fflush(stdout);} else if (d->errstat == THREAD_JOIN_ERROR) {printf("%s", ERRMSG_THREAD_JOIN); fflush(stdout);} else if (d->errstat == MUTEX_INIT_ERROR) {printf("%s", ERRMSG_MUTEX_INIT); fflush(stdout);} else if (d->errstat == MUTEX_DESTROY_ERROR) {printf("%s", ERRMSG_MUTEX_DESTROY); fflush(stdout);} else if (d->errstat == MUTEX_LOCK_ERROR) {printf("%s", ERRMSG_MUTEX_LOCK); fflush(stdout);} else if (d->errstat == MUTEX_UNLOCK_ERROR) {printf("%s", ERRMSG_MUTEX_UNLOCK); fflush(stdout);} else if (d->errstat == GETTIMEOFDAY_ERROR) {printf("%s", ERRMSG_GETTIMEOFDAY); fflush(stdout);} else if (d->errstat == USLEEP_ERROR) {printf("%s", ERRMSG_USLEEP); fflush(stdout);} if (d->simustat == SIMU_LASTS) {printf("SIMU_LASTS\n"); fflush(stdout);} else if (d->simustat == ANY_ERROR_HAS_OCCURRED) {printf("ANY_ERROR_HAS_OCCURRED\n"); fflush(stdout);} else if (d->simustat == ANYONE_DIED) {printf("ANYONE_DIED\n"); fflush(stdout);} else if (d->simustat == REACHED_N_TIMES_MUST_EAT) {printf("REACHED_N_TIMES_MUST_EAT\n"); fflush(stdout);}
 
 # define __DEBUG__(d) printf("["ANSI_BOLD_GREEN"%17s"ANSI_BOLD_CYAN"%3d"ANSI_RESET", "ANSI_BOLD_YELLOW"%-22s"ANSI_RESET" ", __func__, __LINE__, __FILE__); fflush(stdout); if (!errno) {printf("errno:"ANSI_BOLD"%d"ANSI_RESET" ", errno); fflush(stdout);} else {printf("errno:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET" ", errno); fflush(stdout);} if (!d->errstat) {printf("errstat:"ANSI_BOLD"%d"ANSI_RESET, d->errstat); fflush(stdout);} else {printf("errstat:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET, d->errstat); fflush(stdout);} printf("]\n"); fflush(stdout)
-
-# define __DEBUG_WITH_OWN_P__(d, own_p) printf("["ANSI_BOLD_GREEN"%17s"ANSI_BOLD_CYAN"%3d"ANSI_RESET", "ANSI_BOLD_YELLOW"%-22s"ANSI_RESET, __func__, __LINE__, __FILE__); fflush(stdout); if (!errno) {printf("errno:"ANSI_BOLD"%d"ANSI_RESET" ", errno); fflush(stdout);} else {printf("errno:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET" ", errno); fflush(stdout);} if (!d->errstat) {printf("errstat:"ANSI_BOLD"%d"ANSI_RESET"]", d->errstat); fflush(stdout);} else {printf("errstat:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET"]", d->errstat); fflush(stdout);} printf("\n  [p_arr_i:%zu, philo_i:%zu, rhf_i:%zu, lhf_i:%zu]\n", (own_p)->p_arr_i, (own_p)->philo_i, (own_p)->rhf_i, (own_p)->lhf_i); fflush(stdout)
-
-# define __DEBUG_WITH_INPUT__(d) printf("["ANSI_BOLD_GREEN"%17s"ANSI_BOLD_CYAN"%3d"ANSI_RESET", "ANSI_BOLD_YELLOW"%-22s"ANSI_RESET, __func__, __LINE__, __FILE__); fflush(stdout); if (!errno) {printf("errno:"ANSI_BOLD"%d"ANSI_RESET" ", errno); fflush(stdout);} else {printf("errno:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET" ", errno); fflush(stdout);} if (!d->errstat) {printf("errstat:"ANSI_BOLD"%d"ANSI_RESET"]", d->errstat); fflush(stdout);} else {printf("errstat:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET"]", d->errstat); fflush(stdout);} printf("\n  [n_philo:%zu, time_to_die:%zu, time_to_eat:%zu, time_to_sleep:%zu, n_times_must_eat:%zu]\n", d->i.n_philo, d->i.time_to_die, d->i.time_to_eat, d->i.time_to_sleep, d->i.n_times_must_eat); fflush(stdout)
-
-# define __DEBUG_PRINTSTAT__(d) printf("The current value of printstat is [%d]. (%s, %d)\n", d->printstat, __func__, __LINE__)
 
 /* -----object-like macros----*/
 

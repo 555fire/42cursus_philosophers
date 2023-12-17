@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:04 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/17 23:23:09 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/17 23:26:47 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 static void	lock_printstat(t_data *d)
 {
-//	__DEBUG_PRINTSTAT__(d);
-//	printf("The current value of printstat is [%d]. (%s, %d)\n", d->printstat, __func__, __LINE__);
 	while (1)
 	{
 		if (d->printstat == UNLOCKED)
@@ -28,8 +26,6 @@ static void	lock_printstat(t_data *d)
 
 static void	unlock_printstat(t_data *d)
 {
-//	__DEBUG_PRINTSTAT__(d);
-//	printf("The current value of printstat is [%d]. (%s, %d)\n", d->printstat, __func__, __LINE__);
 	if (d->printstat == UNLOCKED)
 	{
 		d->errstat = PRINTSTAT_ERROR;

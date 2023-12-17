@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:47 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/17 22:54:48 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 00:11:27 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ time_t	get_usec_time(t_data *d)
 
 	if (gettimeofday(&s_timeval, NULL))
 	{
-//		__DEBUG__(d);
 		d->errstat = GETTIMEOFDAY_ERROR;
 		return (0);
 	}
