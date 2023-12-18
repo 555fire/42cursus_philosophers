@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:08 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/17 23:49:30 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 00:47:39 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ t_data	*set_data(t_data *d, size_t argc, char **argv)
 	}
 
 	d->start_time = get_usec_time(d) + 50000;
-	__DEBUG_PRINT_TARGET_TIME__(d->start_time);
+	__DEBUG_PRINT_TARGET_TIME__(d, d->start_time);
 
 	return (d);
 }

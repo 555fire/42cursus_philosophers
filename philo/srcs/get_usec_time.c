@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:47 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/18 00:11:27 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 00:49:22 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,20 @@ t_funcstat	wait_precise_time(t_data *d, time_t target_time)
 		cur_time = get_usec_time(d);
 		if (d->errstat)
 		{
-			__DEBUG_PRINT_FAILED__();
+			__DEBUG_PRINT_FAILED__(d);
 			return (1);
 		}
-		__DEBUG_PRINT_DIFF_TIME__(cur_time, target_time);
+		__DEBUG_PRINT_DIFF_TIME__(d, cur_time, target_time);
 		if (cur_time >= target_time)
 		{
-			__DEBUG_PRINT_SUCCEEDED__();
+			__DEBUG_PRINT_SUCCEEDED__(d);
 			return (0);
 		}
-		__DEBUG_PRINT_WAITS__();
+		__DEBUG_PRINT_WAITS__(d);
 		if (usleep((target_time - cur_time) / 2))
 		{
 			d->errstat = USLEEP_ERROR;
-			__DEBUG_PRINT_FAILED__();
+			__DEBUG_PRINT_FAILED__(d);
 			return (1);
 		}
 	}

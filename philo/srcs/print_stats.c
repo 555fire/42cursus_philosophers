@@ -6,25 +6,26 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:04 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/17 23:26:47 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 09:31:08 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-static void	lock_printstat(t_data *d)
+void	lock_printstat(t_data *d)
 {
 	while (1)
 	{
 		if (d->printstat == UNLOCKED)
 		{
 			d->printstat = LOCKED;
+			printf("\tNOW SUCCESSFULLY LOCKED!\n");
 			break ;
 		}
 	}
 }
 
-static void	unlock_printstat(t_data *d)
+void	unlock_printstat(t_data *d)
 {
 	if (d->printstat == UNLOCKED)
 	{
@@ -32,7 +33,17 @@ static void	unlock_printstat(t_data *d)
 		printf(ERRMSG_PRINTSTAT);
 	}
 	else
+	{
 		d->printstat = UNLOCKED;
+		printf("\tNOW SUCCESSFULLY UNLOCKED!\n");
+	}
+}
+
+void	print_atomically(t_data *d, char *s)
+{
+	lock_printstat(d);
+	printf("%s", s);
+	unlock_printstat(d);
 }
 
 void	print_errstat_without_d(t_errstat errstat)

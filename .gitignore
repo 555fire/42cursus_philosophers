@@ -1,7 +1,7 @@
 *.o
 *.a
 *.out
-*.philo
+philo/philo
 *.md
 *.vscode
 *.DS_Store

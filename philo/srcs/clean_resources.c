@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:37 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/18 00:21:20 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 00:44:42 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	clean_resources(t_data *d)
 	// 		break ;
 	// 	loop_count++;
 	// 	if (loop_count % 1000000 == 0)
-	// 		__DEBUG_PRINT_LOOP_COUNT__(loop_count);
+	// 		__DEBUG_PRINT_LOOP_COUNT__(d, loop_count);
 	// }
 
 	i = 0;

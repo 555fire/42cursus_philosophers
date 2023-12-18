@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:29 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/17 23:56:02 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 09:37:21 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,21 +30,37 @@
 /*----macroinstructions(macros)----*/
 /* -----function-like macros----*/
 /*  -----function-like macros for debugging----*/
-# define __DEBUG_PRINT_LOOP_COUNT__(loop_count) printf(" %10s  [loop_count:"ANSI_BOLD_BLINK"%8zu"ANSI_RESET"]\n", __func__, loop_count); fflush(stdout)
+# define __DEBUG_PRINT_LOOP_COUNT__(d, loop_count) lock_printstat(d); printf(" %10s  [loop_count:"ANSI_BOLD_BLINK"%8zu"ANSI_RESET"]\n", __func__, loop_count); fflush(stdout); unlock_printstat(d)
 
-# define __DEBUG_PRINT_SUCCEEDED__() printf("\n<%s succeeded!>%d\n", __func__, __LINE__); fflush(stdout)
-# define __DEBUG_PRINT_WAITS__() printf("\n<%s is still waiting...>%d\n", __func__, __LINE__); fflush(stdout)
-# define __DEBUG_PRINT_FAILED__() printf("\n<%s failed...>%d\n", __func__, __LINE__); fflush(stdout)
+# define __DEBUG_PRINT_SUCCEEDED__(d) lock_printstat(d); printf("\n<%s succeeded!>%d\n", __func__, __LINE__); fflush(stdout); unlock_printstat(d)
+# define __DEBUG_PRINT_WAITS__(d) lock_printstat(d); printf("\n<%s is still waiting...>%d\n", __func__, __LINE__); fflush(stdout); unlock_printstat(d)
+# define __DEBUG_PRINT_FAILED__(d) lock_printstat(d); printf("\n<%s failed...>%d\n", __func__, __LINE__); fflush(stdout); unlock_printstat(d)
 
 # define __DEBUG_PRINT_SIMUSTART__() printf("----------Now simulation has started.---------\n"); fflush(stdout)
 # define __DEBUG_PRINT_SIMUEND__() printf("----------Now simulation is over.---------\n\n"); fflush(stdout)
 
-# define __DEBUG_PRINT_TARGET_TIME__(target_time) printf("[   target_time :%16ld]\n", target_time); fflush(stdout)
-# define __DEBUG_PRINT_DIFF_TIME__(cur_time, target_time) printf("[(target-cur)/2 :%16ld]%s|%d\n", target_time - cur_time, __func__, __LINE__); fflush(stdout)
+# define __DEBUG_PRINT_TARGET_TIME__(d, target_time) lock_printstat(d); printf("[   target_time :%16ld]\n", target_time); fflush(stdout); unlock_printstat(d)
+# define __DEBUG_PRINT_DIFF_TIME__(d, cur_time, target_time) lock_printstat(d); printf("[(target-cur)/2 :%16ld]%s|%d\n", target_time - cur_time, __func__, __LINE__); fflush(stdout); unlock_printstat(d)
 
-# define __DEBUG_PRINT_THREAD_INFO__(own_p) printf("\n"); fflush(stdout); if(own_p->threadrole==ONE_OF_PHILOS) {printf("["ANSI_BOLD_BACK_MAGENTA"ONE_OF_PHILOS"ANSI_RESET); fflush(stdout);} else {printf("["ANSI_BOLD_BACK_MAGENTA"A_MONITOR"ANSI_RESET"    "); fflush(stdout);} printf("  :%zu,", (own_p)->philo_i); fflush(stdout); printf(ANSI_BOLD_CYAN"%d"ANSI_RESET", ", __LINE__); fflush(stdout); if (!(own_p)->philostat) {printf(ANSI_BOLD_BACK_YELLOW"%u"ANSI_RESET, (own_p)->philostat); fflush(stdout);} else {printf(ANSI_BOLD_BLINK_BACK_BLUE"%u"ANSI_RESET, (own_p)->philostat); fflush(stdout);} printf("\n\n"); fflush(stdout)
+//# define __DEBUG_PRINT_THREAD_INFO__(d, own_p) lock_printstat(d); printf("\n"); fflush(stdout); if(own_p->threadrole==ONE_OF_PHILOS) {printf("["ANSI_BOLD_BACK_MAGENTA"ONE_OF_PHILOS"ANSI_RESET); fflush(stdout);} else {printf("["ANSI_BOLD_BACK_MAGENTA"A_MONITOR"ANSI_RESET"    "); fflush(stdout);} printf("  :%zu,", (own_p)->philo_i); fflush(stdout); printf(ANSI_BOLD_CYAN"%d"ANSI_RESET", ", __LINE__); fflush(stdout); if (!(own_p)->philostat) {printf(ANSI_BOLD_BACK_YELLOW"%u"ANSI_RESET, (own_p)->philostat); fflush(stdout);} else {printf(ANSI_BOLD_BLINK_BACK_BLUE"%u"ANSI_RESET, (own_p)->philostat); fflush(stdout);} printf("\n\n"); fflush(stdout); unlock_printstat(d)
+# define __DEBUG_PRINT_THREAD_INFO__(d, own_p) lock_printstat(d); if(own_p->threadrole==ONE_OF_PHILOS) {printf("["ANSI_BOLD_BACK_MAGENTA"ONE_OF_PHILOS"ANSI_RESET); fflush(stdout);} else {printf("["ANSI_BOLD_BACK_MAGENTA"A_MONITOR"ANSI_RESET"    "); fflush(stdout);} printf("  :%zu,", (own_p)->philo_i); fflush(stdout); printf(ANSI_BOLD_CYAN"%d"ANSI_RESET", ", __LINE__); fflush(stdout); if (!(own_p)->philostat) {printf(ANSI_BOLD_BACK_YELLOW"%u"ANSI_RESET"\n", (own_p)->philostat); fflush(stdout);} else {printf(ANSI_BOLD_BLINK_BACK_BLUE"%u"ANSI_RESET"\n", (own_p)->philostat); fflush(stdout);} unlock_printstat(d)
 
-# define __DEBUG__(d) printf("["ANSI_BOLD_GREEN"%17s"ANSI_BOLD_CYAN"%3d"ANSI_RESET", "ANSI_BOLD_YELLOW"%-22s"ANSI_RESET" ", __func__, __LINE__, __FILE__); fflush(stdout); if (!errno) {printf("errno:"ANSI_BOLD"%d"ANSI_RESET" ", errno); fflush(stdout);} else {printf("errno:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET" ", errno); fflush(stdout);} if (!d->errstat) {printf("errstat:"ANSI_BOLD"%d"ANSI_RESET, d->errstat); fflush(stdout);} else {printf("errstat:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET, d->errstat); fflush(stdout);} printf("]\n"); fflush(stdout)
+# define __DEBUG__(d) lock_printstat(d); printf("["ANSI_BOLD_GREEN"%17s"ANSI_BOLD_CYAN"%3d"ANSI_RESET", "ANSI_BOLD_YELLOW"%-22s"ANSI_RESET" ", __func__, __LINE__, __FILE__); fflush(stdout); if (!errno) {printf("errno:"ANSI_BOLD"%d"ANSI_RESET" ", errno); fflush(stdout);} else {printf("errno:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET" ", errno); fflush(stdout);} if (!d->errstat) {printf("errstat:"ANSI_BOLD"%d"ANSI_RESET, d->errstat); fflush(stdout);} else {printf("errstat:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET, d->errstat); fflush(stdout);} printf("]\n"); fflush(stdout); unlock_printstat(d)
+// # define __DEBUG_PRINT_LOOP_COUNT__(loop_count) printf(" %10s  [loop_count:"ANSI_BOLD_BLINK"%8zu"ANSI_RESET"]\n", __func__, loop_count); fflush(stdout)
+//
+// # define __DEBUG_PRINT_SUCCEEDED__() printf("\n<%s succeeded!>%d\n", __func__, __LINE__); fflush(stdout)
+// # define __DEBUG_PRINT_WAITS__() printf("\n<%s is still waiting...>%d\n", __func__, __LINE__); fflush(stdout)
+// # define __DEBUG_PRINT_FAILED__() printf("\n<%s failed...>%d\n", __func__, __LINE__); fflush(stdout)
+//
+// # define __DEBUG_PRINT_SIMUSTART__() printf("----------Now simulation has started.---------\n"); fflush(stdout)
+// # define __DEBUG_PRINT_SIMUEND__() printf("----------Now simulation is over.---------\n\n"); fflush(stdout)
+//
+// # define __DEBUG_PRINT_TARGET_TIME__(target_time) printf("[   target_time :%16ld]\n", target_time); fflush(stdout)
+// # define __DEBUG_PRINT_DIFF_TIME__(cur_time, target_time) printf("[(target-cur)/2 :%16ld]%s|%d\n", target_time - cur_time, __func__, __LINE__); fflush(stdout)
+//
+// # define __DEBUG_PRINT_THREAD_INFO__(own_p) printf("\n"); fflush(stdout); if(own_p->threadrole==ONE_OF_PHILOS) {printf("["ANSI_BOLD_BACK_MAGENTA"ONE_OF_PHILOS"ANSI_RESET); fflush(stdout);} else {printf("["ANSI_BOLD_BACK_MAGENTA"A_MONITOR"ANSI_RESET"    "); fflush(stdout);} printf("  :%zu,", (own_p)->philo_i); fflush(stdout); printf(ANSI_BOLD_CYAN"%d"ANSI_RESET", ", __LINE__); fflush(stdout); if (!(own_p)->philostat) {printf(ANSI_BOLD_BACK_YELLOW"%u"ANSI_RESET, (own_p)->philostat); fflush(stdout);} else {printf(ANSI_BOLD_BLINK_BACK_BLUE"%u"ANSI_RESET, (own_p)->philostat); fflush(stdout);} printf("\n\n"); fflush(stdout)
+//
+// # define __DEBUG__(d) printf("["ANSI_BOLD_GREEN"%17s"ANSI_BOLD_CYAN"%3d"ANSI_RESET", "ANSI_BOLD_YELLOW"%-22s"ANSI_RESET" ", __func__, __LINE__, __FILE__); fflush(stdout); if (!errno) {printf("errno:"ANSI_BOLD"%d"ANSI_RESET" ", errno); fflush(stdout);} else {printf("errno:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET" ", errno); fflush(stdout);} if (!d->errstat) {printf("errstat:"ANSI_BOLD"%d"ANSI_RESET, d->errstat); fflush(stdout);} else {printf("errstat:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET, d->errstat); fflush(stdout);} printf("]\n"); fflush(stdout)
 
 /* -----object-like macros----*/
 
@@ -257,6 +273,8 @@ void		*monitor_routine(void *passed_arg_in_the_form_of_void_ptr);
 void		clean_resources(t_data *d);
 
 /* -----print_stats.c----*/
+void		lock_printstat(t_data *d);
+void		unlock_printstat(t_data *d);
 void		print_errstat_without_d(t_errstat errstat);
 void		print_errstat(t_data *d, t_errstat errstat);
 t_funcstat	print_philostat(t_personal *own_p, t_philostat philostat);

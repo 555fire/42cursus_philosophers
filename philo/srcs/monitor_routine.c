@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:55 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/17 23:45:11 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 00:46:02 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	*monitor_routine(void *passed_arg_in_the_form_of_void_ptr)
 	t_personal	*own_p;
 
 	own_p = passed_arg_in_the_form_of_void_ptr;
-	__DEBUG_PRINT_THREAD_INFO__(own_p);
+	__DEBUG_PRINT_THREAD_INFO__(own_p->d, own_p);
 	if (own_p->d->errstat)
 		return (NULL);
 	if (wait_precise_time(own_p->d, own_p->d->start_time))

@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:51 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/17 22:54:52 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 09:48:00 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 int	main(int argc, char **argv)
 {
-	t_data	*d;
+	t_data				*d;
+//	_Atomic t_printstat	printstat;
 
 	__DEBUG_PRINT_SIMUSTART__();
 	d = NULL;
