@@ -1,7 +1,0 @@
-*.o
-*.a
-*.out
-philo/philo
-*.md
-*.vscode
-*.DS_Store
