@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:08 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/18 21:09:24 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 22:21:25 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,9 @@ static t_funcstat	valid_args(t_data *d, size_t argc, char **argv)
 
 	if (argc != 5 && argc != 6)
 	{
-		d->errstat = ARGC_ERROR;
-		perror_atomically(d, ERRMSG_ARGC, __func__, __LINE__);
+		handle_errors(d, ARGC_ERROR, __func__, __LINE__);
+//		d->errstat = ARGC_ERROR;
+//		perror_atomically(d, ERRMSG_ARGC, __func__, __LINE__);
 		return (1);
 	}
 	i = 1;
@@ -92,14 +93,15 @@ t_data	*set_data(t_data *d, size_t argc, char **argv)
 	{
 		if (pthread_mutex_init(&d->mutexfork_arr[i], NULL))
 		{
-			d->errstat = MUTEX_INIT_ERROR;
-			perror_atomically(d, ERRMSG_MUTEX_INIT, __func__, __LINE__);
+			handle_errors(d, MUTEX_INIT_ERROR, __func__, __LINE__);
+//			d->errstat = MUTEX_INIT_ERROR;
+//			perror_atomically(d, ERRMSG_MUTEX_INIT, __func__, __LINE__);
 			break ;
 		}
 		i++;
 	}
 	d->start_time = get_usec_time(d) + 50000;
-	__DEBUG_PRINT_TARGET_TIME__(d, d->start_time);
+//	__DEBUG_PRINT_TARGET_TIME__(d, d->start_time);
 	return (d);
 }
 

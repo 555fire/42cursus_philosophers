@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:29 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/18 21:26:32 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 23:17:03 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@
 # define __DEBUG_PRINT_DIFF_TIME__(d, cur_time, target_time) lock_printstat(d); printf("[(target-cur)/2 :%16ld]%s|%d\n", target_time - cur_time, __func__, __LINE__); fflush(stdout); unlock_printstat(d)
 
 //# define __DEBUG_PRINT_THREAD_INFO__(d, own_p) lock_printstat(d); if(own_p->threadrole==ONE_OF_PHILOS) {printf("  "ANSI_BOLD_BACK_MAGENTA"PHILO"ANSI_RESET); fflush(stdout);} else {printf(ANSI_BOLD_BACK_MAGENTA"MONITOR"ANSI_RESET); fflush(stdout);} printf("%zu, ", (own_p)->philo_i); fflush(stdout); printf(ANSI_BOLD_CYAN"%d"ANSI_RESET", ", __LINE__); fflush(stdout); if (!(own_p)->philostat) {printf(ANSI_BOLD_BACK_YELLOW"%u"ANSI_RESET"\n", (own_p)->philostat); fflush(stdout);} else {printf(ANSI_BOLD_BLINK_BACK_BLUE"%u"ANSI_RESET"\n", (own_p)->philostat); fflush(stdout);} unlock_printstat(d)
-# define __DEBUG_PRINT_THREAD_INFO__(d, own_p) lock_printstat(d); if(own_p->threadrole==ONE_OF_PHILOS) {printf("[  "ANSI_BOLD_BACK_MAGENTA"PHILO"ANSI_RESET); fflush(stdout);} else {printf("["ANSI_BOLD_BACK_MAGENTA"MONITOR"ANSI_RESET); fflush(stdout);} printf("%zu, ", (own_p)->philo_i); fflush(stdout); printf(ANSI_BOLD_GREEN"%23s"ANSI_BOLD_CYAN"%d"ANSI_RESET", ", __func__, __LINE__); fflush(stdout); if (!(own_p)->philostat) {printf("philostat:"ANSI_BOLD_BACK_YELLOW"%u"ANSI_RESET" ", (own_p)->philostat); fflush(stdout);} else {printf("philostat:"ANSI_BOLD_BACK_BLUE"%u"ANSI_RESET" ", (own_p)->philostat); fflush(stdout);} if (!errno) {printf("errno:"ANSI_BOLD"%d"ANSI_RESET" ", errno); fflush(stdout);} else {printf("errno:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET" ", errno); fflush(stdout);} if (!d->errstat) {printf("errstat:"ANSI_BOLD"%d"ANSI_RESET, d->errstat); fflush(stdout);} else {printf("errstat:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET, d->errstat); fflush(stdout);} printf("]\n"); fflush(stdout); unlock_printstat(d)
+# define __DEBUG_PRINT_THREAD_INFO__(d, own_p) lock_printstat(d); if(own_p->threadrole==ONE_OF_PHILOS) {printf("["ANSI_BOLD_BACK_MAGENTA"PHI"ANSI_RESET);} else {printf("["ANSI_BOLD_BACK_MAGENTA"MON"ANSI_RESET);} fflush(stdout); printf("%zu, ", (own_p)->philo_i); fflush(stdout); if (!(own_p)->philostat) {printf(ANSI_BOLD_BACK_YELLOW"%u"ANSI_RESET" ", (own_p)->philostat);} else {printf(ANSI_BOLD_BACK_BLUE"%u"ANSI_RESET" ", (own_p)->philostat);} fflush(stdout); printf(ANSI_BOLD_GREEN"%26s"ANSI_BOLD_CYAN" %d"ANSI_RESET", ", __func__, __LINE__); fflush(stdout); if (!errno) {printf("errno:"ANSI_BOLD"%d"ANSI_RESET" ", errno); fflush(stdout);} else {printf("errno:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET" ", errno); fflush(stdout);} if (!d->errstat) {printf("errstat:"ANSI_BOLD"%d"ANSI_RESET, d->errstat); fflush(stdout);} else {printf("errstat:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET, d->errstat); fflush(stdout);} printf("]\n"); fflush(stdout); unlock_printstat(d)
 
-# define __DEBUG__(d) lock_printstat(d); printf("["ANSI_BOLD_GREEN"%33s"ANSI_BOLD_CYAN"%3d"ANSI_RESET", "ANSI_BOLD_YELLOW"%-22s"ANSI_RESET" ", __func__, __LINE__, __FILE__); fflush(stdout); if (!errno) {printf("errno:"ANSI_BOLD"%d"ANSI_RESET" ", errno); fflush(stdout);} else {printf("errno:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET" ", errno); fflush(stdout);} if (!d->errstat) {printf("errstat:"ANSI_BOLD"%d"ANSI_RESET, d->errstat); fflush(stdout);} else {printf("errstat:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET, d->errstat); fflush(stdout);} printf("]\n"); fflush(stdout); unlock_printstat(d)
+# define __DEBUG__(d) lock_printstat(d); printf("["ANSI_BOLD_GREEN"%34s"ANSI_BOLD_CYAN"%3d"ANSI_RESET", "ANSI_BOLD_YELLOW"%-22s"ANSI_RESET" ", __func__, __LINE__, __FILE__); fflush(stdout); if (!errno) {printf("errno:"ANSI_BOLD"%d"ANSI_RESET" ", errno); fflush(stdout);} else {printf("errno:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET" ", errno); fflush(stdout);} if (!d->errstat) {printf("errstat:"ANSI_BOLD"%d"ANSI_RESET, d->errstat); fflush(stdout);} else {printf("errstat:"ANSI_BOLD_BLINK_RED"%d"ANSI_RESET, d->errstat); fflush(stdout);} printf("]\n"); fflush(stdout); unlock_printstat(d)
 
 /* -----object-like macros----*/
 /*  -----object-like macro for ANSI escape code----*/
@@ -262,11 +262,14 @@ void		*monitor_routine(void *passed_arg_in_the_form_of_void_ptr);
 void		clean_resources(t_data *d);
 
 /* -----print_stats.c----*/
-//void		lock_printstat(t_data *d);
-//void		unlock_printstat(t_data *d);
+void		lock_printstat(t_data *d);
+void		unlock_printstat(t_data *d);
 void		print_atomically(t_data *d, char *s);
 void		perror_atomically(t_data *d, char *s, const char *func, int line);
-void		handle_error(t_data *d, t_errstat errstat, const char *func, int line);
+void		handle_error(t_data *d, t_errstat errstat);
+void		handle_errors(t_data *d, t_errstat errstat, const char *func, int line);
+void		print_errstat(t_data *d, t_errstat errstat);
+void		print_errstats(t_errstat errstat, const char *func, int line);
 t_funcstat	print_philostat(t_personal *own_p, t_philostat philostat);
 t_funcstat	print_simustat(t_personal *own_p, t_simustat simustat);
 

@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:12 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/18 21:13:59 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 22:21:25 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,17 @@ size_t	ph_atoi(char *s, t_data *d)
 	{
 		if (*s < '0' || *s > '9')
 		{
-			d->errstat = ARGV_ERROR;
-			perror_atomically(d, ERRMSG_ARGV, __func__, __LINE__);
+			handle_errors(d, ARGV_ERROR, __func__, __LINE__);
+//			d->errstat = ARGV_ERROR;
+//			perror_atomically(d, ERRMSG_ARGV, __func__, __LINE__);
 			return (0);
 		}
 		if (num > SIZE_MAX / 10 || (num == SIZE_MAX / 10
 				&& (unsigned long)(*s - '0') >= SIZE_MAX % 10))
 		{
-			d->errstat = ARGV_ERROR;
-			perror_atomically(d, ERRMSG_ARGV, __func__, __LINE__);
+			handle_errors(d, ARGV_ERROR, __func__, __LINE__);
+//			d->errstat = ARGV_ERROR;
+//			perror_atomically(d, ERRMSG_ARGV, __func__, __LINE__);
 			return (0);
 		}
 		num = num * 10 + (*s - '0');
@@ -70,15 +72,17 @@ void	*ph_calloc(size_t count, size_t size, t_data *d)
 
 	if (!count || !size || size > SIZE_MAX / count)
 	{
-		d->errstat = CALLOC_ARGS_ERROR;
-		perror_atomically(d, ERRMSG_CALLOC_ARGS, __func__, __LINE__);
+		handle_errors(d, CALLOC_ARGS_ERROR, __func__, __LINE__);
+//		d->errstat = CALLOC_ARGS_ERROR;
+//		perror_atomically(d, ERRMSG_CALLOC_ARGS, __func__, __LINE__);
 		return (NULL);
 	}
 	mem = malloc(count * size);
 	if (!mem)
 	{
-		d->errstat = MALLOC_ERROR;
-		perror_atomically(d, ERRMSG_MALLOC, __func__, __LINE__);
+		handle_errors(d, MALLOC_ERROR, __func__, __LINE__);
+//		d->errstat = MALLOC_ERROR;
+//		perror_atomically(d, ERRMSG_MALLOC, __func__, __LINE__);
 		return (NULL);
 	}
 	memset(mem, 0, count * size);

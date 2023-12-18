@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:47 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/18 20:50:59 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 22:21:25 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@ time_t	get_usec_time(t_data *d)
 
 	if (gettimeofday(&s_timeval, NULL))
 	{
-		d->errstat = GETTIMEOFDAY_ERROR;
-		perror_atomically(d, ERRMSG_GETTIMEOFDAY, __func__, __LINE__);
+		handle_errors(d, GETTIMEOFDAY_ERROR, __func__, __LINE__);
+//		d->errstat = GETTIMEOFDAY_ERROR;
+//		perror_atomically(d, ERRMSG_GETTIMEOFDAY, __func__, __LINE__);
 		return (0);
 	}
 	usec_time = s_timeval.tv_sec * 1000000 + s_timeval.tv_usec;
@@ -36,22 +37,17 @@ t_funcstat	wait_precise_time(t_data *d, time_t target_time)
 	{
 		cur_time = get_usec_time(d);
 		if (d->errstat)
-		{
-//			__DEBUG_PRINT_FAILED__(d);
 			return (1);
-		}
-//		__DEBUG_PRINT_DIFF_TIME__(d, cur_time, target_time);
 		if (cur_time >= target_time)
 		{
 			__DEBUG__(d);
-//			__DEBUG_PRINT_SUCCEEDED__(d);
 			return (0);
 		}
-//		__DEBUG_PRINT_WAITS__(d);
 		if (usleep((target_time - cur_time) / 2))
 		{
-			d->errstat = USLEEP_ERROR;
-			perror_atomically(d, ERRMSG_GETTIMEOFDAY, __func__, __LINE__);
+			handle_errors(d, USLEEP_ERROR, __func__, __LINE__);
+//			d->errstat = USLEEP_ERROR;
+//			perror_atomically(d, ERRMSG_USLEEP, __func__, __LINE__);
 			return (1);
 		}
 	}

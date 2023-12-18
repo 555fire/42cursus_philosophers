@@ -6,25 +6,20 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:04 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/18 21:33:19 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 22:28:21 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-static void	lock_printstat(t_data *d)
+void	lock_printstat(t_data *d)
 {
 	d->printstat = LOCKED;
 }
 
-static void	unlock_printstat(t_data *d)
+void	unlock_printstat(t_data *d)
 {
 	d->printstat = UNLOCKED;
-}
-
-static void	set_errstat(t_data *d, t_errstat errstat)
-{
-	d->errstat = errstat;
 }
 
 void	print_atomically(t_data *d, char *s)
@@ -41,71 +36,111 @@ void	perror_atomically(t_data *d, char *s, const char *func, int line)
 	unlock_printstat(d);
 }
 
-void	handle_error(t_data *d, t_errstat errstat, const char *func, int line)
+void	handle_error(t_data *d, t_errstat errstat)
 {
 	lock_printstat(d);
-	set_errstat(d, errstat);
-	print_errstat(d, errstat, func, line);
+	d->errstat = errstat;
+	print_errstat(d, errstat);
 	unlock_printstat(d);
 }
 
-void	print_errstat(t_data *d, t_errstat errstat, const char *func, int line)
+void	handle_errors(t_data *d, t_errstat errstat, const char *func, int line)
 {
-	char	*errmsg;
-
-	if (errstat == ARGC_ERROR)
-		errmsg = ERRMSG_ARGC;
-	else if (errstat == ARGV_ERROR)
-		errmsg = ERRMSG_ARGV;
-	else if (errstat == MALLOC_ERROR)
-		errmsg = ERRMSG_MALLOC;
-	else if (errstat == CALLOC_ARGS_ERROR)
-		errmsg = ERRMSG_CALLOC_ARGS;
-	else if (errstat == THREAD_CREATE_ERROR)
-		errmsg = ERRMSG_THREAD_CREATE;
-	else if (errstat == THREAD_JOIN_ERROR)
-		errmsg = ERRMSG_THREAD_JOIN;
-	else if (errstat == MUTEX_INIT_ERROR)
-		errmsg = ERRMSG_MUTEX_INIT;
-	else if (errstat == MUTEX_DESTROY_ERROR)
-		errmsg = ERRMSG_MUTEX_DESTROY;
-	else if (errstat == MUTEX_LOCK_ERROR)
-		errmsg = ERRMSG_MUTEX_LOCK;
-	else if (errstat == MUTEX_UNLOCK_ERROR)
-		errmsg = ERRMSG_MUTEX_UNLOCK;
-	else if (errstat == GETTIMEOFDAY_ERROR)
-		errmsg = ERRMSG_GETTIMEOFDAY;
-	else if (errstat == USLEEP_ERROR)
-		errmsg = ERRMSG_USLEEP;
-	printf(ANSI_BOLD_RED"%s"ANSI_RESET"%s, %d\n", errmsg, func, line);
+	lock_printstat(d);
+	d->errstat = errstat;
+	print_errstats(errstat, func, line);
+	unlock_printstat(d);
 }
-// void	print_errstat(t_data *d, t_errstat errstat)
+
+// void	print_errstats(t_data *d, t_errstat errstat, const char *func, int line)
 // {
+// 	char	*errmsg;
+//
+// 	errmsg = NULL;
 // 	if (errstat == ARGC_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_ARGC ANSI_RESET);
+// 		errmsg = ERRMSG_ARGC;
 // 	else if (errstat == ARGV_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_ARGV ANSI_RESET);
+// 		errmsg = ERRMSG_ARGV;
 // 	else if (errstat == MALLOC_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_MALLOC ANSI_RESET);
+// 		errmsg = ERRMSG_MALLOC;
 // 	else if (errstat == CALLOC_ARGS_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_CALLOC_ARGS ANSI_RESET);
+// 		errmsg = ERRMSG_CALLOC_ARGS;
 // 	else if (errstat == THREAD_CREATE_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_THREAD_CREATE ANSI_RESET);
+// 		errmsg = ERRMSG_THREAD_CREATE;
 // 	else if (errstat == THREAD_JOIN_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_THREAD_JOIN ANSI_RESET);
+// 		errmsg = ERRMSG_THREAD_JOIN;
 // 	else if (errstat == MUTEX_INIT_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_MUTEX_INIT ANSI_RESET);
+// 		errmsg = ERRMSG_MUTEX_INIT;
 // 	else if (errstat == MUTEX_DESTROY_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_MUTEX_DESTROY ANSI_RESET);
+// 		errmsg = ERRMSG_MUTEX_DESTROY;
 // 	else if (errstat == MUTEX_LOCK_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_MUTEX_LOCK ANSI_RESET);
+// 		errmsg = ERRMSG_MUTEX_LOCK;
 // 	else if (errstat == MUTEX_UNLOCK_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_MUTEX_UNLOCK ANSI_RESET);
+// 		errmsg = ERRMSG_MUTEX_UNLOCK;
 // 	else if (errstat == GETTIMEOFDAY_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_GETTIMEOFDAY ANSI_RESET);
+// 		errmsg = ERRMSG_GETTIMEOFDAY;
 // 	else if (errstat == USLEEP_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_USLEEP ANSI_RESET);
+// 		errmsg = ERRMSG_USLEEP;
+// 	printf(ANSI_BOLD_RED"%s"ANSI_RESET"%s, %d\n", errmsg, func, line);
 // }
+
+void	print_errstat(t_data *d, t_errstat errstat)
+{
+	lock_printstat(d);
+	if (errstat == ARGC_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_ARGC ANSI_RESET);
+	else if (errstat == ARGV_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_ARGV ANSI_RESET);
+	else if (errstat == MALLOC_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_MALLOC ANSI_RESET);
+	else if (errstat == CALLOC_ARGS_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_CALLOC_ARGS ANSI_RESET);
+	else if (errstat == THREAD_CREATE_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_THREAD_CREATE ANSI_RESET);
+	else if (errstat == THREAD_JOIN_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_THREAD_JOIN ANSI_RESET);
+	else if (errstat == MUTEX_INIT_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_MUTEX_INIT ANSI_RESET);
+	else if (errstat == MUTEX_DESTROY_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_MUTEX_DESTROY ANSI_RESET);
+	else if (errstat == MUTEX_LOCK_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_MUTEX_LOCK ANSI_RESET);
+	else if (errstat == MUTEX_UNLOCK_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_MUTEX_UNLOCK ANSI_RESET);
+	else if (errstat == GETTIMEOFDAY_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_GETTIMEOFDAY ANSI_RESET);
+	else if (errstat == USLEEP_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_USLEEP ANSI_RESET);
+	unlock_printstat(d);
+}
+
+void	print_errstats(t_errstat errstat, const char *func, int line)
+{
+	if (errstat == ARGC_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_ARGC ANSI_RESET"%s, %d\n", func, line);
+	else if (errstat == ARGV_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_ARGV ANSI_RESET"%s, %d\n", func, line);
+	else if (errstat == MALLOC_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_MALLOC ANSI_RESET"%s, %d\n", func, line);
+	else if (errstat == CALLOC_ARGS_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_CALLOC_ARGS ANSI_RESET"%s, %d\n", func, line);
+	else if (errstat == THREAD_CREATE_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_THREAD_CREATE ANSI_RESET"%s, %d\n", func, line);
+	else if (errstat == THREAD_JOIN_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_THREAD_JOIN ANSI_RESET"%s, %d\n", func, line);
+	else if (errstat == MUTEX_INIT_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_MUTEX_INIT ANSI_RESET"%s, %d\n", func, line);
+	else if (errstat == MUTEX_DESTROY_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_MUTEX_DESTROY ANSI_RESET"%s, %d\n", func, line);
+	else if (errstat == MUTEX_LOCK_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_MUTEX_LOCK ANSI_RESET"%s, %d\n", func, line);
+	else if (errstat == MUTEX_UNLOCK_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_MUTEX_UNLOCK ANSI_RESET"%s, %d\n", func, line);
+	else if (errstat == GETTIMEOFDAY_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_GETTIMEOFDAY ANSI_RESET"%s, %d\n", func, line);
+	else if (errstat == USLEEP_ERROR)
+		printf(ANSI_BOLD_RED ERRMSG_USLEEP ANSI_RESET"%s, %d\n", func, line);
+}
 
 t_funcstat	print_philostat(t_personal *own_p, t_philostat philostat)
 {
@@ -117,9 +152,7 @@ t_funcstat	print_philostat(t_personal *own_p, t_philostat philostat)
 		return (1);
 	relative_usec = usec_time - own_p->d->start_time;
 	lock_printstat(own_p->d);
-	if (philostat == WAITING_FOR_TAKINGFORK)
-		;
-	else if (philostat == HASTOOKFORK)
+	if (philostat == HASTOOKFORK)
 		printf("%ld%s%zu%s%s", relative_usec, SPC, own_p->philo_i, SPC, MSG_TOOKFORK);
 	else if (philostat == EATING)
 		printf("%ld%s%zu%s%s", relative_usec, SPC, own_p->philo_i, SPC, MSG_EATING);

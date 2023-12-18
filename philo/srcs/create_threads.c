@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:40 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/18 10:45:44 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 22:21:25 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,9 @@ void	create_threads(t_data *d)
 		}
 		if (pthread_create(&d->thread_arr[i], NULL, func_ptr, &d->p_arr[i]))
 		{
-			d->errstat = THREAD_CREATE_ERROR;
-			perror_atomically(d, ERRMSG_THREAD_CREATE, __func__, __LINE__);
+			handle_errors(d, THREAD_CREATE_ERROR, __func__, __LINE__);
+//			d->errstat = THREAD_CREATE_ERROR;
+//			perror_atomically(d, ERRMSG_THREAD_CREATE, __func__, __LINE__);
 			return ;
 		}
 		i++;
