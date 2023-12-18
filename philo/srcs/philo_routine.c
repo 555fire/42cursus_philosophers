@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:00 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/18 00:46:28 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 10:48:17 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,14 @@ static t_funcstat	try_to_take_forks(t_personal *own_p)
 	if (pthread_mutex_lock(&own_p->d->mutexfork_arr[own_p->rhf_i]))
 	{
 		own_p->d->errstat = MUTEX_LOCK_ERROR;
+		perror_atomically(own_p->d, ERRMSG_MUTEX_LOCK, __func__, __LINE__);
 		return (1);
 	}
 	print_philostat(own_p, HASTOOKFORK);
 	pthread_mutex_lock(&own_p->d->mutexfork_arr[own_p->lhf_i]);
 	{
 		own_p->d->errstat = MUTEX_LOCK_ERROR;
+		perror_atomically(own_p->d, ERRMSG_MUTEX_LOCK, __func__, __LINE__);
 		return (1);
 	}
 	print_philostat(own_p, HASTOOKFORK);
@@ -48,11 +50,13 @@ static t_funcstat	philo_eat(t_personal *own_p)
 	if (pthread_mutex_unlock(&own_p->d->mutexfork_arr[own_p->rhf_i]))
 	{
 		own_p->d->errstat = MUTEX_UNLOCK_ERROR;
+		perror_atomically(own_p->d, ERRMSG_MUTEX_UNLOCK, __func__, __LINE__);
 		return (1);
 	}
 	if (pthread_mutex_unlock(&own_p->d->mutexfork_arr[own_p->lhf_i]))
 	{
 		own_p->d->errstat = MUTEX_UNLOCK_ERROR;
+		perror_atomically(own_p->d, ERRMSG_MUTEX_UNLOCK, __func__, __LINE__);
 		return (1);
 	}
 	return (0);

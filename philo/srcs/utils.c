@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:12 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/18 00:18:19 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 11:09:45 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,14 @@ size_t	ph_atoi(char *s, t_data *d)
 		if (*s < '0' || *s > '9')
 		{
 			d->errstat = ARGV_ERROR;
-			print_errstat(d, ARGV_ERROR);
+			perror_atomically(d, ERRMSG_ARGV, __func__, __LINE__);
 			return (0);
 		}
 		if (num > SIZE_MAX / 10 || (num == SIZE_MAX / 10
 				&& (unsigned long)(*s - '0') >= SIZE_MAX % 10))
 		{
 			d->errstat = ARGV_ERROR;
-			print_errstat(d, ARGV_ERROR);
+			perror_atomically(d, ERRMSG_ARGV, __func__, __LINE__);
 			return (0);
 		}
 		num = num * 10 + (*s - '0');
@@ -50,14 +50,14 @@ void	*ph_calloc_without_d(size_t count, size_t size)
 	if (!count || !size || size > SIZE_MAX / count)
 	{
 		errno = EINVAL;
-		print_errstat_without_d(CALLOC_ARGS_ERROR);
+		printf("%s [%s, %d]", ERRMSG_CALLOC_ARGS, __func__, __LINE__);
 		return (NULL);
 	}
 	mem = malloc(count * size);
 	if (!mem)
 	{
 		errno = ENOMEM;
-		print_errstat_without_d(MALLOC_ERROR);
+		printf("%s [%s, %d]", ERRMSG_MALLOC, __func__, __LINE__);
 		return (NULL);
 	}
 	memset(mem, 0, count * size);
@@ -71,14 +71,14 @@ void	*ph_calloc(size_t count, size_t size, t_data *d)
 	if (!count || !size || size > SIZE_MAX / count)
 	{
 		d->errstat = CALLOC_ARGS_ERROR;
-		print_errstat(d, CALLOC_ARGS_ERROR);
+		perror_atomically(d, ERRMSG_CALLOC_ARGS, __func__, __LINE__);
 		return (NULL);
 	}
 	mem = malloc(count * size);
 	if (!mem)
 	{
 		d->errstat = MALLOC_ERROR;
-		print_errstat(d, MALLOC_ERROR);
+		perror_atomically(d, ERRMSG_MALLOC, __func__, __LINE__);
 		return (NULL);
 	}
 	memset(mem, 0, count * size);

@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:04 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/18 09:31:08 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 11:52:42 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	lock_printstat(t_data *d)
 		if (d->printstat == UNLOCKED)
 		{
 			d->printstat = LOCKED;
-			printf("\tNOW SUCCESSFULLY LOCKED!\n");
+			printf("\tLOCKED!\n");
 			break ;
 		}
 	}
@@ -35,7 +35,7 @@ void	unlock_printstat(t_data *d)
 	else
 	{
 		d->printstat = UNLOCKED;
-		printf("\tNOW SUCCESSFULLY UNLOCKED!\n");
+		printf("\tUNLOCKED!\n");
 	}
 }
 
@@ -46,51 +46,58 @@ void	print_atomically(t_data *d, char *s)
 	unlock_printstat(d);
 }
 
-void	print_errstat_without_d(t_errstat errstat)
-{
-	if (errstat == ARGC_ERROR)
-		printf("%s", ERRMSG_ARGC);
-	else if (errstat == ARGV_ERROR)
-		printf("%s", ERRMSG_ARGV);
-	else if (errstat == CALLOC_ARGS_ERROR)
-		printf("%s", ERRMSG_CALLOC_ARGS);
-	else if (errstat == MALLOC_ERROR)
-		printf("%s", ERRMSG_MALLOC);
-	return ;
-}
-
-void	print_errstat(t_data *d, t_errstat errstat)
+void	perror_atomically(t_data *d, char *s, const char *func, int line)
 {
 	lock_printstat(d);
-	if (errstat == NO_ERROR)
-		;
-	else if (errstat == ARGC_ERROR)
-		printf("%s", ERRMSG_ARGC);
-	else if (errstat == ARGV_ERROR)
-		printf("%s", ERRMSG_ARGV);
-	else if (errstat == MALLOC_ERROR)
-		printf("%s", ERRMSG_MALLOC);
-	else if (errstat == CALLOC_ARGS_ERROR)
-		printf("%s", ERRMSG_CALLOC_ARGS);
-	else if (errstat == THREAD_CREATE_ERROR)
-		printf("%s", ERRMSG_THREAD_CREATE);
-	else if (errstat == THREAD_JOIN_ERROR)
-		printf("%s", ERRMSG_THREAD_JOIN);
-	else if (errstat == MUTEX_INIT_ERROR)
-		printf("%s", ERRMSG_MUTEX_INIT);
-	else if (errstat == MUTEX_DESTROY_ERROR)
-		printf("%s", ERRMSG_MUTEX_DESTROY);
-	else if (errstat == MUTEX_LOCK_ERROR)
-		printf("%s", ERRMSG_MUTEX_LOCK);
-	else if (errstat == MUTEX_UNLOCK_ERROR)
-		printf("%s", ERRMSG_MUTEX_UNLOCK);
-	else if (errstat == GETTIMEOFDAY_ERROR)
-		printf("%s", ERRMSG_GETTIMEOFDAY);
-	else if (errstat == USLEEP_ERROR)
-		printf("%s", ERRMSG_USLEEP);
+	printf("%s [%s, %d]", s, func, line);
 	unlock_printstat(d);
-	return ;
 }
+
+// void	print_errstat_without_d(t_errstat errstat)
+// {
+// 	if (errstat == ARGC_ERROR)
+// 		printf("%s", ERRMSG_ARGC);
+// 	else if (errstat == ARGV_ERROR)
+// 		printf("%s", ERRMSG_ARGV);
+// 	else if (errstat == CALLOC_ARGS_ERROR)
+// 		printf("%s", ERRMSG_CALLOC_ARGS);
+// 	else if (errstat == MALLOC_ERROR)
+// 		printf("%s", ERRMSG_MALLOC);
+// 	return ;
+// }
+//
+// void	print_errstat(t_data *d, t_errstat errstat)
+// {
+// 	lock_printstat(d);
+// 	if (errstat == NO_ERROR)
+// 		;
+// 	else if (errstat == ARGC_ERROR)
+// 		printf("%s", ERRMSG_ARGC);
+// 	else if (errstat == ARGV_ERROR)
+// 		printf("%s", ERRMSG_ARGV);
+// 	else if (errstat == MALLOC_ERROR)
+// 		printf("%s", ERRMSG_MALLOC);
+// 	else if (errstat == CALLOC_ARGS_ERROR)
+// 		printf("%s", ERRMSG_CALLOC_ARGS);
+// 	else if (errstat == THREAD_CREATE_ERROR)
+// 		printf("%s", ERRMSG_THREAD_CREATE);
+// 	else if (errstat == THREAD_JOIN_ERROR)
+// 		printf("%s", ERRMSG_THREAD_JOIN);
+// 	else if (errstat == MUTEX_INIT_ERROR)
+// 		printf("%s", ERRMSG_MUTEX_INIT);
+// 	else if (errstat == MUTEX_DESTROY_ERROR)
+// 		printf("%s", ERRMSG_MUTEX_DESTROY);
+// 	else if (errstat == MUTEX_LOCK_ERROR)
+// 		printf("%s", ERRMSG_MUTEX_LOCK);
+// 	else if (errstat == MUTEX_UNLOCK_ERROR)
+// 		printf("%s", ERRMSG_MUTEX_UNLOCK);
+// 	else if (errstat == GETTIMEOFDAY_ERROR)
+// 		printf("%s", ERRMSG_GETTIMEOFDAY);
+// 	else if (errstat == USLEEP_ERROR)
+// 		printf("%s", ERRMSG_USLEEP);
+// 	unlock_printstat(d);
+// 	return ;
+// }
 
 t_funcstat	print_philostat(t_personal *own_p, t_philostat philostat)
 {

@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:47 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/18 00:49:22 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 10:46:35 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ time_t	get_usec_time(t_data *d)
 	if (gettimeofday(&s_timeval, NULL))
 	{
 		d->errstat = GETTIMEOFDAY_ERROR;
+		perror_atomically(d, ERRMSG_GETTIMEOFDAY, __func__, __LINE__);
 		return (0);
 	}
 	usec_time = s_timeval.tv_sec * 1000000 + s_timeval.tv_usec;
@@ -49,7 +50,7 @@ t_funcstat	wait_precise_time(t_data *d, time_t target_time)
 		if (usleep((target_time - cur_time) / 2))
 		{
 			d->errstat = USLEEP_ERROR;
-			__DEBUG_PRINT_FAILED__(d);
+			perror_atomically(d, ERRMSG_GETTIMEOFDAY, __func__, __LINE__);
 			return (1);
 		}
 	}

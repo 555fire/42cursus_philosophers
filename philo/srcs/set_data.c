@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:08 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/18 00:47:39 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/18 11:04:27 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static t_funcstat	valid_args(t_data *d, size_t argc, char **argv)
 	if (argc != 5 && argc != 6)
 	{
 		d->errstat = ARGC_ERROR;
-		print_errstat(d, ARGC_ERROR);
+		perror_atomically(d, ERRMSG_ARGC, __func__, __LINE__);
 		return (1);
 	}
 	i = 1;
@@ -99,7 +99,7 @@ t_data	*set_data(t_data *d, size_t argc, char **argv)
 		if (pthread_mutex_init(&d->mutexfork_arr[i], NULL))
 		{
 			d->errstat = MUTEX_INIT_ERROR;
-			print_errstat(d, MUTEX_INIT_ERROR);
+			perror_atomically(d, ERRMSG_MUTEX_INIT, __func__, __LINE__);
 			break ;
 		}
 		i++;
