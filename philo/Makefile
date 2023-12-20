@@ -6,7 +6,7 @@
 #    By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/17 22:55:15 by mamiyaza          #+#    #+#              #
-#    Updated: 2023/12/17 22:55:16 by mamiyaza         ###   ########.fr        #
+#    Updated: 2023/12/20 20:37:18 by mamiyaza         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,7 +56,16 @@ ARGS_FOR_ERROR_TEST12 := 1 0
 ARGS_FOR_ERROR_TEST14 := 1 1 0
 ARGS_FOR_ERROR_TEST15 := 1 1 1 0
 ARGS_FOR_ERROR_TEST16 := 1 1 1 1 0
-
+ARGS_FOR_ERROR_TEST17 := -100
+ARGS_FOR_ERROR_TEST18 := 1 59
+ARGS_FOR_ERROR_TEST19 := 1 1 59
+ARGS_FOR_ERROR_TEST20 := 1 1 1 59
+ARGS_FOR_ERROR_TEST21 := 1 1 1 1 -100
+ARGS_FOR_ERROR_TEST22 := 201
+ARGS_FOR_ERROR_TEST23 := 1 2147483648
+ARGS_FOR_ERROR_TEST24 := 1 1 2147483648
+ARGS_FOR_ERROR_TEST25 := 1 1 1 2147483648
+ARGS_FOR_ERROR_TEST26 := 1 1 1 1 2147483648
 
 # rules for Make
 $(NAME) : $(OBJDIR) $(OBJS)
@@ -113,6 +122,16 @@ test_e:
 	./$(NAME) $(ARGS_FOR_ERROR_TEST14)
 	./$(NAME) $(ARGS_FOR_ERROR_TEST15)
 	./$(NAME) $(ARGS_FOR_ERROR_TEST16)
+	./$(NAME) $(ARGS_FOR_ERROR_TEST17)
+	./$(NAME) $(ARGS_FOR_ERROR_TEST18)
+	./$(NAME) $(ARGS_FOR_ERROR_TEST19)
+	./$(NAME) $(ARGS_FOR_ERROR_TEST20)
+	./$(NAME) $(ARGS_FOR_ERROR_TEST21)
+	./$(NAME) $(ARGS_FOR_ERROR_TEST22)
+	./$(NAME) $(ARGS_FOR_ERROR_TEST23)
+	./$(NAME) $(ARGS_FOR_ERROR_TEST24)
+	./$(NAME) $(ARGS_FOR_ERROR_TEST25)
+	./$(NAME) $(ARGS_FOR_ERROR_TEST26)
 	make fclean
 
 .PHONY: all clean fclean re test0 test1

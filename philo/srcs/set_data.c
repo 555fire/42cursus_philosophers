@@ -6,29 +6,33 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:08 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/18 22:21:25 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/20 21:42:01 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-static t_funcstat	valid_args(t_data *d, size_t argc, char **argv)
+static t_funcstat	valid_argc(t_data *d, size_t argc, char **argv)
 {
 	size_t	i;
+	size_t	arg;
 
 	if (argc != 5 && argc != 6)
 	{
 		handle_errors(d, ARGC_ERROR, __func__, __LINE__);
-//		d->errstat = ARGC_ERROR;
-//		perror_atomically(d, ERRMSG_ARGC, __func__, __LINE__);
 		return (1);
 	}
 	i = 1;
 	while (i <= argc - 1)
 	{
-		ph_atoi(argv[i], d);
-		if (d->errstat)
+		arg = ph_atoi(argv[i], d);
+		if (d->errstat || (i == 1 && (arg < 1 || arg > 200))
+			|| ((i >= 2 && i <= 4) && (arg < 60 || arg > INT_MAX))
+			|| (i == 5 && (arg < 0 || arg > INT_MAX)))
+		{
+			handle_errors(d, ARGV_ERROR, __func__, __LINE__);
 			return (1);
+		}
 		i++;
 	}
 	return (0);
@@ -47,6 +51,9 @@ static t_funcstat	set_args(t_data *d, size_t argc, char **argv)
 	return (0);
 }
 
+// static t_funcstat	set_attrs(t_data *d)
+// {}
+
 t_data	*set_data(t_data *d, size_t argc, char **argv)
 {
 	size_t	i;
@@ -54,9 +61,8 @@ t_data	*set_data(t_data *d, size_t argc, char **argv)
 	d = ph_calloc_without_d(sizeof(t_data), 1);
 	if (errno)
 		return (d);
-	if (valid_args(d, argc, argv))
+	if (valid_argc(d, argc, argv) || set_args(d, argc, argv))
 		return (d);
-	set_args(d, argc, argv);
 	d->p_arr = NULL;
 	d->p_arr = ph_calloc(d->i.n_philo + NUM_OF_MONITORS, sizeof(t_personal), d);
 	if (d->errstat)
@@ -94,14 +100,11 @@ t_data	*set_data(t_data *d, size_t argc, char **argv)
 		if (pthread_mutex_init(&d->mutexfork_arr[i], NULL))
 		{
 			handle_errors(d, MUTEX_INIT_ERROR, __func__, __LINE__);
-//			d->errstat = MUTEX_INIT_ERROR;
-//			perror_atomically(d, ERRMSG_MUTEX_INIT, __func__, __LINE__);
 			break ;
 		}
 		i++;
 	}
 	d->start_time = get_usec_time(d) + 50000;
-//	__DEBUG_PRINT_TARGET_TIME__(d, d->start_time);
 	return (d);
 }
 

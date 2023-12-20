@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:29 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/18 23:17:03 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/20 21:48:22 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,15 +77,17 @@
 # define ANSI_RESET "\033[0m"
 
 /*  -----object-like macros for error messages----*/
-# define ERRMSG_ARGC "USAGE:\n\
+# define ERRMSG_ARGC "USAGE (1):\n\
 \tThis executable file \"philo\" takes 4 or 5 arguments.\n\
 \tEach arguments refers \"number_of_philosophers\", \"time_to_die\"(in milliseconds),\n\
 \t\"time_to_eat\"(in milliseconds) and \"time_to_sleep\"(in milliseconds).\n\
 \tIf you add 5th argument, it represents \"number_of_times_each_philosopher_must_eat\".\n"
-# define ERRMSG_ARGV "USAGE:\n\
+# define ERRMSG_ARGV "USAGE (2):\n\
 \tThe range of values each arguments can take is as follows:\n\
-\t\"number_of_philo\" : an integer value between 1 and 200.\n\
-\tother arguments : an integer value between 60 and INT_MAX\n"
+\t\"number_of_philo\":\t\t\t\tan integer value between 1 and 200.\n\
+\t\"time_to_die\"(in milliseconds), \"time_to_eat\"(in milliseconds) and\n\
+\t   \"time_to_sleep\"(in milliseconds):\t\tan integer value between 60 and INT_MAX\n\
+\t\"number_of_times_each_philosophers_must_eat\":\tan integer value between 1 and INT_MAX\n"
 # define ERRMSG_CALLOC_ARGS "\terror: values of arguments of calloc is invalid!\n"
 # define ERRMSG_MALLOC "\tfatal error: malloc failed.\n"
 # define ERRMSG_THREAD_CREATE "\tfatal error: pthread_create failed.\n"
