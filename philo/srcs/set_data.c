@@ -6,13 +6,13 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:08 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/20 21:42:01 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2023/12/23 01:07:13 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-static t_funcstat	valid_argc(t_data *d, size_t argc, char **argv)
+static t_funcstat	valid_argc_and_argv(t_data *d, size_t argc, char **argv)
 {
 	size_t	i;
 	size_t	arg;
@@ -40,6 +40,8 @@ static t_funcstat	valid_argc(t_data *d, size_t argc, char **argv)
 
 static t_funcstat	set_args(t_data *d, size_t argc, char **argv)
 {
+	if (valid_argc_and_argv(d, argc, argv))
+		return (1);
 	d->i.n_philo = ph_atoi(argv[1], d);
 	d->i.time_to_die = ph_atoi(argv[2], d);
 	d->i.time_to_eat = ph_atoi(argv[3], d);
@@ -51,31 +53,30 @@ static t_funcstat	set_args(t_data *d, size_t argc, char **argv)
 	return (0);
 }
 
-// static t_funcstat	set_attrs(t_data *d)
-// {}
-
-t_data	*set_data(t_data *d, size_t argc, char **argv)
+static t_funcstat	alloc_attrs(t_data *d)
 {
-	size_t	i;
-
-	d = ph_calloc_without_d(sizeof(t_data), 1);
-	if (errno)
-		return (d);
-	if (valid_argc(d, argc, argv) || set_args(d, argc, argv))
-		return (d);
 	d->p_arr = NULL;
 	d->p_arr = ph_calloc(d->i.n_philo + NUM_OF_MONITORS, sizeof(t_personal), d);
 	if (d->errstat)
-		return (d);
+		return (1);
 	d->thread_arr = NULL;
 	d->thread_arr = ph_calloc(d->i.n_philo + NUM_OF_MONITORS,
 			sizeof(pthread_t), d);
 	if (d->errstat)
-		return (d);
+		return (1);
 	d->mutexfork_arr = NULL;
 	d->mutexfork_arr = ph_calloc(d->i.n_philo, sizeof(pthread_mutex_t), d);
 	if (d->errstat)
-		return (d);
+		return (1);
+	return (0);
+}
+
+static t_funcstat	set_attrs(t_data *d)
+{
+	size_t	i;
+
+	if (alloc_attrs(d))
+		return (1);
 	i = 0;
 	while (i < d->i.n_philo + NUM_OF_MONITORS)
 	{
@@ -94,6 +95,18 @@ t_data	*set_data(t_data *d, size_t argc, char **argv)
 			d->p_arr[i].lhf_i = 0;
 		i++;
 	}
+	return (0);
+}
+
+t_data	*set_data(t_data *d, size_t argc, char **argv)
+{
+	size_t	i;
+
+	d = ph_calloc_without_d(sizeof(t_data), 1);
+	if (errno)
+		return (d);
+	if (set_args(d, argc, argv) || set_attrs(d))
+		return (d);
 	i = 0;
 	while (i < d->i.n_philo)
 	{
