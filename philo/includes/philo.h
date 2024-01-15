@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:29 by mamiyaza          #+#    #+#             */
-/*   Updated: 2024/01/15 19:13:49 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 21:15:12 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@
 # define MAX_TIME_TO_DIE_TIME_TO_EAT_TIME_TO_SLEEP INT_MAX
 
 # define ARGC_NUM_EAT 5
-# define MIN_NUM_EAT 0
+# define MIN_NUM_EAT 1
 # define MAX_NUM_EAT INT_MAX
 
 # define NUM_OF_MONITORS 1
@@ -285,16 +285,9 @@ void		unlock_printstat(t_data *d);
 //
 void		atomic_print(t_data *d, const char *s);
 void		atomic_print_ansi_bold_red(t_data *d, const char *s);
-//void		atomic_put_stderr_with_debug_info(t_data *d, const char *s, const char *func);
 //
-void		set_errstat_and_print_errmsg(t_data *d, t_errstat errstat, const char *s);
-//void		set_errstat_and_print_stderr_with_debug_info(t_data *d, t_errstat errstat, const char *s, const char *func);
+void		set_errstat_simustat_and_print_errmsg(t_data *d, t_errstat errstat, const char *s);
 //
-//void		set_and_print_errstat(t_data *d, t_errstat errstat);
-//void		set_and_print_errstat_and_print_debug_info(t_data *d, t_errstat errstat, const char *func, int line);
-//
-//void		print_errstat(t_data *d, t_errstat errstat);
-//void		print_errstat_and_debug_info(t_errstat errstat, const char *func, int line);
 t_funcstat	print_philostat(t_personal *own_p, t_philostat philostat);
 t_funcstat	print_simustat(t_personal *own_p, t_simustat simustat);
 
@@ -303,9 +296,9 @@ size_t		ft_strlen(const char *s);
 void		putstr_stdout(const char *s);
 void		putstr_stderr(const char *s);
 //
-size_t		ph_atoi(char *s, t_data *d);
-void		*ph_calloc_without_d(size_t size, size_t count);
-void		*ph_calloc(size_t size, size_t count, t_data *d);
+size_t		ft_atoi(char *s, t_data *d);
+void		*ft_calloc_without_d(size_t size, size_t count);
+void		*ft_calloc(size_t size, size_t count, t_data *d);
 void		free_safely(void *mem0, void *mem1, void *mem2, void *mem3);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:51 by mamiyaza          #+#    #+#             */
-/*   Updated: 2024/01/15 00:13:06 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 21:12:50 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,11 @@ int	main(int argc, char **argv)
 // }
 
 /*
-(*d).i.n_philo = ph_atoi(argv[1]);
-d->i.n_philo = ph_atoi(argv[1]);
+(*d).i.n_philo = ft_atoi(argv[1]);
+d->i.n_philo = ft_atoi(argv[1]);
 these 2 are same meaning.
 
-*d->i.n_philo = ph_atoi(argv[1]);
-*(d->i.n_philo) = ph_atoi(argv[1]);
+*d->i.n_philo = ft_atoi(argv[1]);
+*(d->i.n_philo) = ft_atoi(argv[1]);
 these 2 are same meaning.
 */

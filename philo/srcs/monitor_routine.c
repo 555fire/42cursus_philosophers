@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:55 by mamiyaza          #+#    #+#             */
-/*   Updated: 2024/01/14 23:44:58 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 20:14:41 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,20 @@ void	*monitor_routine(void *passed_arg_in_the_form_of_void_ptr)
 
 	own_p = passed_arg_in_the_form_of_void_ptr;
 	__DEBUG_PRINT_THREAD_INFO__(own_p->d, own_p);
-	if (own_p->d->errstat)
+	if (own_p->d->simustat != SIMU_LASTS)
+	{
+		__DEBUG__(own_p->d);
 		return (NULL);
+	}
 	if (wait_precise_time(own_p->d, own_p->d->start_time))
+	{
+		__DEBUG__(own_p->d);
 		return (NULL);
+	}
+	__DEBUG_PRINT_THREAD_INFO__(own_p->d, own_p);
 	while (1)
 	{
+		__DEBUG_PRINT_THREAD_INFO__(own_p->d, own_p);
 		if (did_all_reach_must_eat_times(own_p) == HAS_REACHED)
 			break ;
 		if (did_anyone_die(own_p) == DIED_OR_AN_ERROR_HAS_OCCURRED)

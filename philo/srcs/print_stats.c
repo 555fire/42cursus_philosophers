@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:04 by mamiyaza          #+#    #+#             */
-/*   Updated: 2024/01/15 18:37:45 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 21:24:01 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,9 @@ void		unlock_printstat(t_data *d);
 //
 void		atomic_print(t_data *d, const char *s);
 void		atomic_print_ansi_bold_red(t_data *d, const char *s);
-//void		atomic_put_stderr_with_debug_info(t_data *d, const char *s, const char *func);
 //
-void		set_errstat_and_print_errmsg(t_data *d, t_errstat errstat, const char *s);
-//void		set_errstat_and_print_stderr_with_debug_info(t_data *d, t_errstat errstat, const char *s, const char *func);
+void		set_errstat_simustat_and_print_errmsg(t_data *d, t_errstat errstat, const char *s);
 //
-//void		set_and_print_errstat(t_data *d, t_errstat errstat);
-//void		set_and_print_errstat_and_print_debug_info(t_data *d, t_errstat errstat, const char *func, int line);
-//
-//void		print_errstat(t_data *d, t_errstat errstat);
-//void		print_errstat_and_debug_info(t_errstat errstat, const char *func, int line);
 t_funcstat	print_philostat(t_personal *own_p, t_philostat philostat);
 t_funcstat	print_simustat(t_personal *own_p, t_simustat simustat);
 
@@ -54,66 +47,12 @@ void	atomic_print_ansi_bold_red(t_data *d, const char *s)
 	unlock_printstat(d);
 }
 
-// void	atomic_put_stderr(t_data *d, const char *s)
-// {
-// 	lock_printstat(d);
-// 	putstr_stderr(ANSI_BOLD_RED);
-// 	putstr_stderr(s);
-// 	putstr_stderr(ANSI_RESET);
-// 	putstr_stderr("\n");
-// 	unlock_printstat(d);
-// }
-
-// void	atomic_put_stderr_with_debug_info(t_data *d, const char *s, const char *func)
-// {
-// 	__DEBUG__(d);
-// 	printf("%u", d->printstat);
-// 	lock_printstat(d);
-// 	printf("%u", d->printstat);
-// 	__DEBUG__(d);
-// 	putstr_stderr(ANSI_BOLD_RED);
-// 	putstr_stderr(s);
-// 	putstr_stderr(ANSI_RESET);
-// 	putstr_stderr("in ");
-// 	putstr_stderr(func);
-// 	putstr_stderr("\n");
-// 	unlock_printstat(d);
-// 	__DEBUG__(d);
-// }
-// for debug.
-
-void	set_errstat_and_print_errmsg(t_data *d, t_errstat errstat, const char *s)
+void	set_errstat_simustat_and_print_errmsg(t_data *d, t_errstat errstat, const char *s)
 {
 	d->errstat = errstat;
+	d->simustat = ANY_ERROR_HAS_OCCURRED;
 	atomic_print_ansi_bold_red(d, s);
 }
-
-// void	set_errstat_and_print_stderr_with_debug_info(t_data *d, t_errstat errstat, const char *s, const char *func)
-// {
-// 	__DEBUG__(d);
-// 	d->errstat = errstat;
-// 	__DEBUG__(d);
-// 	atomic_put_stderr_with_debug_info(d, s, func);
-// 	__DEBUG__(d);
-// }
-// for debug.
-
-// void	set_and_print_errstat(t_data *d, t_errstat errstat)
-// {
-// 	lock_printstat(d);
-// 	d->errstat = errstat;
-// 	print_errstat(d, errstat);
-// 	unlock_printstat(d);
-// }
-
-// void	set_and_print_errstat_with_debug_info(t_data *d, t_errstat errstat, const char *func)
-// {
-// 	lock_printstat(d);
-// 	d->errstat = errstat;
-// 	print_errstat_with_debug_info(d, errstat, func);
-// 	unlock_printstat(d);
-// }
-// for debug.
 
 // void	print_errstat(t_data *d, t_errstat errstat)
 // {
@@ -142,47 +81,6 @@ void	set_errstat_and_print_errmsg(t_data *d, t_errstat errstat, const char *s)
 // 	else if (errstat == USLEEP_ERROR)
 // 		printf(ANSI_BOLD_RED ERRMSG_USLEEP ANSI_RESET);
 // }
-
-// void	print_errstat_with_debug_info(t_errstat errstat, const char *func, int line)
-// {
-// 	if (errstat == ARGC_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_ARGC ANSI_RESET"%s, %d\n",
-// 			func, line);
-// 	else if (errstat == ARGV_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_ARGV ANSI_RESET"%s, %d\n",
-// 			func, line);
-// 	else if (errstat == MALLOC_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_MALLOC ANSI_RESET"%s, %d\n",
-// 			func, line);
-// 	else if (errstat == CALLOC_ARGS_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_CALLOC_ARGS ANSI_RESET"%s, %d\n",
-// 			func, line);
-// 	else if (errstat == THREAD_CREATE_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_THREAD_CREATE ANSI_RESET"%s, %d\n",
-// 			func, line);
-// 	else if (errstat == THREAD_JOIN_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_THREAD_JOIN ANSI_RESET"%s, %d\n",
-// 			func, line);
-// 	else if (errstat == MUTEX_INIT_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_MUTEX_INIT ANSI_RESET"%s, %d\n",
-// 			func, line);
-// 	else if (errstat == MUTEX_DESTROY_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_MUTEX_DESTROY ANSI_RESET"%s, %d\n",
-// 			func, line);
-// 	else if (errstat == MUTEX_LOCK_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_MUTEX_LOCK ANSI_RESET"%s, %d\n",
-// 			func, line);
-// 	else if (errstat == MUTEX_UNLOCK_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_MUTEX_UNLOCK ANSI_RESET"%s, %d\n",
-// 			func, line);
-// 	else if (errstat == GETTIMEOFDAY_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_GETTIMEOFDAY ANSI_RESET"%s, %d\n",
-// 			func, line);
-// 	else if (errstat == USLEEP_ERROR)
-// 		printf(ANSI_BOLD_RED ERRMSG_USLEEP ANSI_RESET"%s, %d\n",
-// 			func, line);
-// }
-// for debug.
 
 t_funcstat	print_philostat(t_personal *own_p, t_philostat philostat)
 {

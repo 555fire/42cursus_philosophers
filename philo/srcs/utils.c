@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:12 by mamiyaza          #+#    #+#             */
-/*   Updated: 2024/01/15 18:44:27 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 21:31:23 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 size_t	ft_strlen(const char *s);
 void	putstr_stdout(const char *s);
 void	putstr_stderr(const char *s);
-size_t	ph_atoi(char *s, t_data *d);
-void	*ph_calloc_without_d(size_t count, size_t size);
-void	*ph_calloc(size_t count, size_t size, t_data *d);
+size_t	ft_atoi(char *s, t_data *d);
+void	*ft_calloc_without_d(size_t count, size_t size);
+void	*ft_calloc(size_t count, size_t size, t_data *d);
 void	free_safely(void *mem0, void *mem1, void *mem2, void *mem3);
 
 size_t	ft_strlen(const char *s)
@@ -42,7 +42,7 @@ void	putstr_stderr(const char *s)
 	write(STDERR_FILENO, s, ft_strlen(s));
 }
 
-size_t	ph_atoi(char *s, t_data *d)
+size_t	ft_atoi(char *s, t_data *d)
 {
 	size_t	num;
 
@@ -55,13 +55,13 @@ size_t	ph_atoi(char *s, t_data *d)
 	{
 		if (*s < '0' || *s > '9')
 		{
-			set_errstat_and_print_errmsg(d, ARGV_ERROR, ERRMSG_ARGC);
+			set_errstat_simustat_and_print_errmsg(d, ARGV_ERROR, ERRMSG_ARGC);
 			return (0);
 		}
 		if (num > SIZE_MAX / 10 || (num == SIZE_MAX / 10
 				&& (unsigned long)(*s - '0') >= SIZE_MAX % 10))
 		{
-			set_errstat_and_print_errmsg(d, ARGV_ERROR, ERRMSG_ARGV);
+			set_errstat_simustat_and_print_errmsg(d, ARGV_ERROR, ERRMSG_ARGV);
 			return (0);
 		}
 		num = num * 10 + (*s - '0');
@@ -70,7 +70,7 @@ size_t	ph_atoi(char *s, t_data *d)
 	return (num);
 }
 
-void	*ph_calloc_without_d(size_t count, size_t size)
+void	*ft_calloc_without_d(size_t count, size_t size)
 {
 	void	*mem;
 
@@ -78,33 +78,33 @@ void	*ph_calloc_without_d(size_t count, size_t size)
 	if (!count || !size || size > SIZE_MAX / count)
 	{
 		errno = EINVAL;
-		printf("%s [%s, %d]", ERRMSG_CALLOC_ARGS, __func__, __LINE__);
+		printf("%s [in %s]", ERRMSG_CALLOC_ARGS, __func__);
 		return (NULL);
 	}
 	mem = malloc(count * size);
 	if (!mem)
 	{
 		errno = ENOMEM;
-		printf("%s [%s, %d]", ERRMSG_MALLOC, __func__, __LINE__);
+		printf("%s [in %s]", ERRMSG_MALLOC, __func__);
 		return (NULL);
 	}
 	memset(mem, 0, count * size);
 	return (mem);
 }
 
-void	*ph_calloc(size_t count, size_t size, t_data *d)
+void	*ft_calloc(size_t count, size_t size, t_data *d)
 {
 	void	*mem;
 
 	if (!count || !size || size > SIZE_MAX / count)
 	{
-		set_errstat_and_print_errmsg(d, CALLOC_ARGS_ERROR, ERRMSG_CALLOC_ARGS);
+		set_errstat_simustat_and_print_errmsg(d, CALLOC_ARGS_ERROR, ERRMSG_CALLOC_ARGS);
 		return (NULL);
 	}
 	mem = malloc(count * size);
 	if (!mem)
 	{
-		set_errstat_and_print_errmsg(d, MALLOC_ERROR, ERRMSG_MALLOC);
+		set_errstat_simustat_and_print_errmsg(d, MALLOC_ERROR, ERRMSG_MALLOC);
 		return (NULL);
 	}
 	memset(mem, 0, count * size);

@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:40 by mamiyaza          #+#    #+#             */
-/*   Updated: 2024/01/15 18:43:06 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 21:15:12 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	create_threads(t_data *d)
 	size_t	i;
 	void	*func_ptr;
 
-	if (errno || d->errstat)
+	if (errno || d->simustat != SIMU_LASTS)
 		return ;
 	i = 0;
 	while (i <= d->i.n_philo)
@@ -38,7 +38,7 @@ void	create_threads(t_data *d)
 		}
 		if (pthread_create(&d->thread_arr[i], NULL, func_ptr, &d->p_arr[i]))
 		{
-			set_errstat_and_print_errmsg(d, THREAD_CREATE_ERROR, ERRMSG_THREAD_CREATE);
+			set_errstat_simustat_and_print_errmsg(d, THREAD_CREATE_ERROR, ERRMSG_THREAD_CREATE);
 			return ;
 		}
 		i++;

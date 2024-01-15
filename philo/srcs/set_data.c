@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:08 by mamiyaza          #+#    #+#             */
-/*   Updated: 2024/01/15 19:39:48 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 21:20:28 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static void			set_args(t_data *d, size_t argc, char **argv);
 static t_funcstat	validate_and_set_args(t_data *d, size_t argc, char **argv);
 static t_funcstat	allocate_attributes(t_data *d);
 static t_funcstat	set_attributes(t_data *d);
+static t_funcstat	init_mutexes(t_data *d);
 t_data				*set_data(size_t argc, char **argv);
 
 static t_funcstat	validate_argc(size_t argc)
@@ -56,7 +57,7 @@ static t_funcstat	validate_argv(t_data *d, size_t argc, char **argv)
 	i = 1;
 	while (i < argc)
 	{
-		arg = ph_atoi(argv[i], d);
+		arg = ft_atoi(argv[i], d);
 		if (d->errstat)
 			return (FAILED);
 		if (validate_num_philo(i, arg)
@@ -70,12 +71,12 @@ static t_funcstat	validate_argv(t_data *d, size_t argc, char **argv)
 
 static void	set_args(t_data *d, size_t argc, char **argv)
 {
-	d->i.n_philo = ph_atoi(argv[1], d);
-	d->i.time_to_die = ph_atoi(argv[2], d);
-	d->i.time_to_eat = ph_atoi(argv[3], d);
-	d->i.time_to_sleep = ph_atoi(argv[4], d);
+	d->i.n_philo = ft_atoi(argv[1], d);
+	d->i.time_to_die = ft_atoi(argv[2], d);
+	d->i.time_to_eat = ft_atoi(argv[3], d);
+	d->i.time_to_sleep = ft_atoi(argv[4], d);
 	if (argc == 6)
-		d->i.n_times_must_eat = ph_atoi(argv[5], d);
+		d->i.n_times_must_eat = ft_atoi(argv[5], d);
 	else
 		d->i.n_times_must_eat = INT_MAX;
 }
@@ -84,12 +85,12 @@ static t_funcstat	validate_and_set_args(t_data *d, size_t argc, char **argv)
 {
 	if (validate_argc(argc))
 	{
-		set_errstat_and_print_errmsg(d, ARGC_ERROR, ERRMSG_ARGC);
+		set_errstat_simustat_and_print_errmsg(d, ARGC_ERROR, ERRMSG_ARGC);
 		return (FAILED);
 	}
 	if (validate_argv(d, argc, argv))
 	{
-		set_errstat_and_print_errmsg(d, ARGV_ERROR, ERRMSG_ARGV);
+		set_errstat_simustat_and_print_errmsg(d, ARGV_ERROR, ERRMSG_ARGV);
 		return (FAILED);
 	}
 	set_args(d, argc, argv);
@@ -99,16 +100,16 @@ static t_funcstat	validate_and_set_args(t_data *d, size_t argc, char **argv)
 static t_funcstat	allocate_attributes(t_data *d)
 {
 	d->p_arr = NULL;
-	d->p_arr = ph_calloc(d->i.n_philo + NUM_OF_MONITORS, sizeof(t_personal), d);
+	d->p_arr = ft_calloc(d->i.n_philo + NUM_OF_MONITORS, sizeof(t_personal), d);
 	if (d->errstat)
 		return (FAILED);
 	d->thread_arr = NULL;
-	d->thread_arr = ph_calloc(d->i.n_philo + NUM_OF_MONITORS,
+	d->thread_arr = ft_calloc(d->i.n_philo + NUM_OF_MONITORS,
 			sizeof(pthread_t), d);
 	if (d->errstat)
 		return (FAILED);
 	d->mutexfork_arr = NULL;
-	d->mutexfork_arr = ph_calloc(d->i.n_philo, sizeof(pthread_mutex_t), d);
+	d->mutexfork_arr = ft_calloc(d->i.n_philo, sizeof(pthread_mutex_t), d);
 	if (d->errstat)
 		return (FAILED);
 	return (SUCCEEDED);
@@ -141,26 +142,36 @@ static t_funcstat	set_attributes(t_data *d)
 	return (0);
 }
 
-t_data	*set_data(size_t argc, char **argv)
+static t_funcstat	init_mutexes(t_data *d)
 {
-	t_data	*d;
 	size_t	i;
 
-	d = ph_calloc_without_d(sizeof(t_data), 1);
-	if (errno)
-		return (d);
-	if (validate_and_set_args(d, argc, argv) || set_attributes(d))
-		return (d);
 	i = 0;
 	while (i < d->i.n_philo)
 	{
 		if (pthread_mutex_init(&d->mutexfork_arr[i], NULL))
 		{
-			set_errstat_and_print_errmsg(d, MUTEX_INIT_ERROR, ERRMSG_MUTEX_INIT);
-			break ;
+			set_errstat_simustat_and_print_errmsg(d, MUTEX_INIT_ERROR, ERRMSG_MUTEX_INIT);
+			return (FAILED);
 		}
 		i++;
 	}
+	return (SUCCEEDED);
+}
+
+t_data	*set_data(size_t argc, char **argv)
+{
+	t_data	*d;
+
+	d = ft_calloc_without_d(sizeof(t_data), 1);
+	if (!d)
+		return (d);
+	if (validate_and_set_args(d, argc, argv))
+		return (d);
+	if (set_attributes(d))
+		return (d);
+	if (init_mutexes(d))
+		return (d);
 	d->start_time = get_time_usec(d) + 50000;
 	return (d);
 }
