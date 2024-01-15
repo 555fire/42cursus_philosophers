@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:29 by mamiyaza          #+#    #+#             */
-/*   Updated: 2024/01/15 17:20:02 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 19:13:49 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,8 +120,8 @@
 # define MIN_NUM_PHILO 1
 # define MAX_NUM_PHILO 200
 
-# define MIN_MINUS_1_ARGC_TIME_TO_DIE_TIME_TO_EAT_TIME_TO_SLEEP 1
-# define MAX_PLUS_1_ARGC_TIME_TO_DIE_TIME_TO_EAT_TIME_TO_SLEEP 5
+# define MIN_ARGC_TIME_TO_DIE_TIME_TO_EAT_TIME_TO_SLEEP 2
+# define MAX_ARGC_TIME_TO_DIE_TIME_TO_EAT_TIME_TO_SLEEP 4
 # define MIN_TIME_TO_DIE_TIME_TO_EAT_TIME_TO_SLEEP 60
 # define MAX_TIME_TO_DIE_TIME_TO_EAT_TIME_TO_SLEEP INT_MAX
 
@@ -283,12 +283,12 @@ void		clean_resources(t_data *d);
 void		lock_printstat(t_data *d);
 void		unlock_printstat(t_data *d);
 //
-void		atomic_put_stdout(t_data *d, const char *s);
-void		atomic_put_stderr(t_data *d, const char *s);
-void		atomic_put_stderr_with_debug_info(t_data *d, const char *s, const char *func);
+void		atomic_print(t_data *d, const char *s);
+void		atomic_print_ansi_bold_red(t_data *d, const char *s);
+//void		atomic_put_stderr_with_debug_info(t_data *d, const char *s, const char *func);
 //
-void		set_errstat_and_print_stderr(t_data *d, t_errstat errstat, const char *s);
-void		set_errstat_and_print_stderr_with_debug_info(t_data *d, t_errstat errstat, const char *s, const char *func);
+void		set_errstat_and_print_errmsg(t_data *d, t_errstat errstat, const char *s);
+//void		set_errstat_and_print_stderr_with_debug_info(t_data *d, t_errstat errstat, const char *s, const char *func);
 //
 //void		set_and_print_errstat(t_data *d, t_errstat errstat);
 //void		set_and_print_errstat_and_print_debug_info(t_data *d, t_errstat errstat, const char *func, int line);

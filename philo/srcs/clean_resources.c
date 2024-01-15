@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:37 by mamiyaza          #+#    #+#             */
-/*   Updated: 2024/01/15 17:24:56 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 18:42:57 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	clean_resources(t_data *d)
 	{
 		if (pthread_join(d->thread_arr[i], NULL))
 		{
-			set_errstat_and_print_stderr_with_debug_info(d, THREAD_JOIN_ERROR, ERRMSG_THREAD_JOIN, __func__);
+			set_errstat_and_print_errmsg(d, THREAD_JOIN_ERROR, ERRMSG_THREAD_JOIN);
 			break ;
 		}
 		i++;
@@ -38,7 +38,7 @@ void	clean_resources(t_data *d)
 	{
 		if (pthread_mutex_destroy(&d->mutexfork_arr[i]))
 		{
-			set_errstat_and_print_stderr_with_debug_info(d, MUTEX_DESTROY_ERROR, ERRMSG_MUTEX_DESTROY, __func__);
+			set_errstat_and_print_errmsg(d, MUTEX_DESTROY_ERROR, ERRMSG_MUTEX_DESTROY);
 			break ;
 		}
 		i++;

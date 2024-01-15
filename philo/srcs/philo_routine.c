@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:00 by mamiyaza          #+#    #+#             */
-/*   Updated: 2024/01/15 17:27:51 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 18:43:39 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,14 @@ static t_funcstat	try_to_take_forks(t_personal *own_p)
 	__DEBUG_PRINT_THREAD_INFO__(own_p->d, own_p);
 	if (pthread_mutex_lock(&own_p->d->mutexfork_arr[own_p->rhf_i]))
 	{
-		set_errstat_and_print_stderr_with_debug_info(own_p->d, MUTEX_LOCK_ERROR, ERRMSG_MUTEX_LOCK, __func__);
+		set_errstat_and_print_errmsg(own_p->d, MUTEX_LOCK_ERROR, ERRMSG_MUTEX_LOCK);
 		return (1);
 	}
 	__DEBUG_PRINT_THREAD_INFO__(own_p->d, own_p);
 	print_philostat(own_p, HASTOOKFORK);
 	if (pthread_mutex_lock(&own_p->d->mutexfork_arr[own_p->lhf_i]))
 	{
-		set_errstat_and_print_stderr_with_debug_info(own_p->d, MUTEX_LOCK_ERROR, ERRMSG_MUTEX_LOCK, __func__);
+		set_errstat_and_print_errmsg(own_p->d, MUTEX_LOCK_ERROR, ERRMSG_MUTEX_LOCK);
 		return (1);
 	}
 	print_philostat(own_p, HASTOOKFORK);
@@ -57,13 +57,13 @@ static t_funcstat	philo_eat(t_personal *own_p)
 	__DEBUG_PRINT_THREAD_INFO__(own_p->d, own_p);
 	if (pthread_mutex_unlock(&own_p->d->mutexfork_arr[own_p->rhf_i]))
 	{
-		set_errstat_and_print_stderr_with_debug_info(own_p->d, MUTEX_UNLOCK_ERROR, ERRMSG_MUTEX_UNLOCK, __func__);
+		set_errstat_and_print_errmsg(own_p->d, MUTEX_UNLOCK_ERROR, ERRMSG_MUTEX_UNLOCK);
 		return (1);
 	}
 	__DEBUG_PRINT_THREAD_INFO__(own_p->d, own_p);
 	if (pthread_mutex_unlock(&own_p->d->mutexfork_arr[own_p->lhf_i]))
 	{
-		set_errstat_and_print_stderr_with_debug_info(own_p->d, MUTEX_UNLOCK_ERROR, ERRMSG_MUTEX_UNLOCK, __func__);
+		set_errstat_and_print_errmsg(own_p->d, MUTEX_UNLOCK_ERROR, ERRMSG_MUTEX_UNLOCK);
 		return (1);
 	}
 	__DEBUG_PRINT_THREAD_INFO__(own_p->d, own_p);

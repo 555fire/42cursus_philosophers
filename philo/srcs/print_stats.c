@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:04 by mamiyaza          #+#    #+#             */
-/*   Updated: 2024/01/15 17:23:30 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 18:37:45 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 void		lock_printstat(t_data *d);
 void		unlock_printstat(t_data *d);
 //
-void		atomic_put_stdout(t_data *d, const char *s);
-void		atomic_put_stderr(t_data *d, const char *s);
-void		atomic_put_stderr_with_debug_info(t_data *d, const char *s, const char *func);
+void		atomic_print(t_data *d, const char *s);
+void		atomic_print_ansi_bold_red(t_data *d, const char *s);
+//void		atomic_put_stderr_with_debug_info(t_data *d, const char *s, const char *func);
 //
-void		set_errstat_and_print_stderr(t_data *d, t_errstat errstat, const char *s);
-void		set_errstat_and_print_stderr_with_debug_info(t_data *d, t_errstat errstat, const char *s, const char *func);
+void		set_errstat_and_print_errmsg(t_data *d, t_errstat errstat, const char *s);
+//void		set_errstat_and_print_stderr_with_debug_info(t_data *d, t_errstat errstat, const char *s, const char *func);
 //
 //void		set_and_print_errstat(t_data *d, t_errstat errstat);
 //void		set_and_print_errstat_and_print_debug_info(t_data *d, t_errstat errstat, const char *func, int line);
@@ -40,47 +40,62 @@ void	unlock_printstat(t_data *d)
 	d->printstat = UNLOCKED;
 }
 
-void	atomic_put_stdout(t_data *d, const char *s)
+void	atomic_print(t_data *d, const char *s)
 {
 	lock_printstat(d);
-	putstr_stdout(s);
+	printf("%s\n", s);
 	unlock_printstat(d);
 }
 
-void	atomic_put_stderr(t_data *d, const char *s)
+void	atomic_print_ansi_bold_red(t_data *d, const char *s)
 {
 	lock_printstat(d);
-	putstr_stderr(ANSI_BOLD_RED);
-	putstr_stderr(s);
-	putstr_stderr(ANSI_RESET);
-	putstr_stderr("\n");
+	printf(ANSI_BOLD_RED"%s"ANSI_RESET"\n", s);
 	unlock_printstat(d);
 }
 
-void	atomic_put_stderr_with_debug_info(t_data *d, const char *s, const char *func)
-{
-	lock_printstat(d);
-	putstr_stderr(ANSI_BOLD_RED);
-	putstr_stderr(s);
-	putstr_stderr(ANSI_RESET);
-	putstr_stderr("in ");
-	putstr_stderr(func);
-	putstr_stderr("\n");
-	unlock_printstat(d);
-}
+// void	atomic_put_stderr(t_data *d, const char *s)
+// {
+// 	lock_printstat(d);
+// 	putstr_stderr(ANSI_BOLD_RED);
+// 	putstr_stderr(s);
+// 	putstr_stderr(ANSI_RESET);
+// 	putstr_stderr("\n");
+// 	unlock_printstat(d);
+// }
+
+// void	atomic_put_stderr_with_debug_info(t_data *d, const char *s, const char *func)
+// {
+// 	__DEBUG__(d);
+// 	printf("%u", d->printstat);
+// 	lock_printstat(d);
+// 	printf("%u", d->printstat);
+// 	__DEBUG__(d);
+// 	putstr_stderr(ANSI_BOLD_RED);
+// 	putstr_stderr(s);
+// 	putstr_stderr(ANSI_RESET);
+// 	putstr_stderr("in ");
+// 	putstr_stderr(func);
+// 	putstr_stderr("\n");
+// 	unlock_printstat(d);
+// 	__DEBUG__(d);
+// }
 // for debug.
 
-void	set_errstat_and_print_stderr(t_data *d, t_errstat errstat, const char *s)
+void	set_errstat_and_print_errmsg(t_data *d, t_errstat errstat, const char *s)
 {
 	d->errstat = errstat;
-	atomic_put_stderr(d, s);
+	atomic_print_ansi_bold_red(d, s);
 }
 
-void	set_errstat_and_print_stderr_with_debug_info(t_data *d, t_errstat errstat, const char *s, const char *func)
-{
-	d->errstat = errstat;
-	atomic_put_stderr_with_debug_info(d, s, func);
-}
+// void	set_errstat_and_print_stderr_with_debug_info(t_data *d, t_errstat errstat, const char *s, const char *func)
+// {
+// 	__DEBUG__(d);
+// 	d->errstat = errstat;
+// 	__DEBUG__(d);
+// 	atomic_put_stderr_with_debug_info(d, s, func);
+// 	__DEBUG__(d);
+// }
 // for debug.
 
 // void	set_and_print_errstat(t_data *d, t_errstat errstat)

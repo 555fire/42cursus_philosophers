@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:12 by mamiyaza          #+#    #+#             */
-/*   Updated: 2024/01/15 17:31:21 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 18:44:27 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,13 @@ size_t	ph_atoi(char *s, t_data *d)
 	{
 		if (*s < '0' || *s > '9')
 		{
-			set_errstat_and_print_stderr_with_debug_info(d, ARGV_ERROR, ERRMSG_ARGC, __func__);
+			set_errstat_and_print_errmsg(d, ARGV_ERROR, ERRMSG_ARGC);
 			return (0);
 		}
 		if (num > SIZE_MAX / 10 || (num == SIZE_MAX / 10
 				&& (unsigned long)(*s - '0') >= SIZE_MAX % 10))
 		{
-			set_errstat_and_print_stderr_with_debug_info(d, ARGV_ERROR, ERRMSG_ARGV, __func__);
+			set_errstat_and_print_errmsg(d, ARGV_ERROR, ERRMSG_ARGV);
 			return (0);
 		}
 		num = num * 10 + (*s - '0');
@@ -98,13 +98,13 @@ void	*ph_calloc(size_t count, size_t size, t_data *d)
 
 	if (!count || !size || size > SIZE_MAX / count)
 	{
-		set_errstat_and_print_stderr_with_debug_info(d, CALLOC_ARGS_ERROR, ERRMSG_CALLOC_ARGS, __func__);
+		set_errstat_and_print_errmsg(d, CALLOC_ARGS_ERROR, ERRMSG_CALLOC_ARGS);
 		return (NULL);
 	}
 	mem = malloc(count * size);
 	if (!mem)
 	{
-		set_errstat_and_print_stderr_with_debug_info(d, MALLOC_ERROR, ERRMSG_MALLOC, __func__);
+		set_errstat_and_print_errmsg(d, MALLOC_ERROR, ERRMSG_MALLOC);
 		return (NULL);
 	}
 	memset(mem, 0, count * size);

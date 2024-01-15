@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:08 by mamiyaza          #+#    #+#             */
-/*   Updated: 2024/01/15 17:41:10 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 19:39:48 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@ t_data				*set_data(size_t argc, char **argv);
 
 static t_funcstat	validate_argc(size_t argc)
 {
-	printf("TEST\n");
-	return (argc >= MIN_ARGC && argc <= MAX_ARGC);
+	return (argc < MIN_ARGC || argc > MAX_ARGC);
 }
 
 static t_funcstat	validate_num_philo(size_t i, size_t arg)
@@ -38,8 +37,8 @@ static t_funcstat	validate_num_philo(size_t i, size_t arg)
 static t_funcstat	validate_time_to_die_time_to_eat\
 _time_to_sleep(size_t i, size_t arg)
 {
-	return ((i >= MIN_MINUS_1_ARGC_TIME_TO_DIE_TIME_TO_EAT_TIME_TO_SLEEP
-		&& i <= MAX_PLUS_1_ARGC_TIME_TO_DIE_TIME_TO_EAT_TIME_TO_SLEEP)
+	return ((i >= MIN_ARGC_TIME_TO_DIE_TIME_TO_EAT_TIME_TO_SLEEP
+		&& i <= MAX_ARGC_TIME_TO_DIE_TIME_TO_EAT_TIME_TO_SLEEP)
 		&& (arg < MIN_TIME_TO_DIE_TIME_TO_EAT_TIME_TO_SLEEP
 		|| arg > MAX_TIME_TO_DIE_TIME_TO_EAT_TIME_TO_SLEEP));
 }
@@ -48,13 +47,6 @@ static t_funcstat	validate_num_eat(size_t i, size_t arg)
 {
 	return (i == ARGC_NUM_EAT && (arg < MIN_NUM_EAT || arg > MAX_NUM_EAT));
 }
-
-// static t_funcstat	validate_arg(size_t i, size_t arg)
-// {
-// 	return (validate_num_philo(i, arg)
-// 		| validate_time_to_die_time_to_eat_time_to_sleep(i, arg)
-// 		| validate_num_eat(i, arg));
-// }
 
 static t_funcstat	validate_argv(t_data *d, size_t argc, char **argv)
 {
@@ -66,14 +58,14 @@ static t_funcstat	validate_argv(t_data *d, size_t argc, char **argv)
 	{
 		arg = ph_atoi(argv[i], d);
 		if (d->errstat)
-			return (SUCCEEDED);
+			return (FAILED);
 		if (validate_num_philo(i, arg)
-			&& validate_time_to_die_time_to_eat_time_to_sleep(i, arg)
-			&& validate_num_eat(i, arg))
-			return (SUCCEEDED);
+			|| validate_time_to_die_time_to_eat_time_to_sleep(i, arg)
+			|| validate_num_eat(i, arg))
+			return (FAILED);
 		i++;
 	}
-	return (FAILED);
+	return (SUCCEEDED);
 }
 
 static void	set_args(t_data *d, size_t argc, char **argv)
@@ -90,16 +82,14 @@ static void	set_args(t_data *d, size_t argc, char **argv)
 
 static t_funcstat	validate_and_set_args(t_data *d, size_t argc, char **argv)
 {
-	__DEBUG__(d);
-	if (!validate_argc(argc))
+	if (validate_argc(argc))
 	{
-		__DEBUG__(d);
-		set_errstat_and_print_stderr_with_debug_info(d, ARGC_ERROR, ERRMSG_ARGC, __func__);
+		set_errstat_and_print_errmsg(d, ARGC_ERROR, ERRMSG_ARGC);
 		return (FAILED);
 	}
-	if (!validate_argv(d, argc, argv))
+	if (validate_argv(d, argc, argv))
 	{
-		set_errstat_and_print_stderr_with_debug_info(d, ARGV_ERROR, ERRMSG_ARGV, __func__);
+		set_errstat_and_print_errmsg(d, ARGV_ERROR, ERRMSG_ARGV);
 		return (FAILED);
 	}
 	set_args(d, argc, argv);
@@ -111,17 +101,17 @@ static t_funcstat	allocate_attributes(t_data *d)
 	d->p_arr = NULL;
 	d->p_arr = ph_calloc(d->i.n_philo + NUM_OF_MONITORS, sizeof(t_personal), d);
 	if (d->errstat)
-		return (1);
+		return (FAILED);
 	d->thread_arr = NULL;
 	d->thread_arr = ph_calloc(d->i.n_philo + NUM_OF_MONITORS,
 			sizeof(pthread_t), d);
 	if (d->errstat)
-		return (1);
+		return (FAILED);
 	d->mutexfork_arr = NULL;
 	d->mutexfork_arr = ph_calloc(d->i.n_philo, sizeof(pthread_mutex_t), d);
 	if (d->errstat)
-		return (1);
-	return (0);
+		return (FAILED);
+	return (SUCCEEDED);
 }
 
 static t_funcstat	set_attributes(t_data *d)
@@ -129,7 +119,7 @@ static t_funcstat	set_attributes(t_data *d)
 	size_t	i;
 
 	if (allocate_attributes(d))
-		return (1);
+		return (FAILED);
 	i = 0;
 	while (i < d->i.n_philo + NUM_OF_MONITORS)
 	{
@@ -159,14 +149,14 @@ t_data	*set_data(size_t argc, char **argv)
 	d = ph_calloc_without_d(sizeof(t_data), 1);
 	if (errno)
 		return (d);
-	if (validate_and_set_args(d, argc, argv) | set_attributes(d))
+	if (validate_and_set_args(d, argc, argv) || set_attributes(d))
 		return (d);
 	i = 0;
 	while (i < d->i.n_philo)
 	{
 		if (pthread_mutex_init(&d->mutexfork_arr[i], NULL))
 		{
-			set_errstat_and_print_stderr_with_debug_info(d, MUTEX_INIT_ERROR, ERRMSG_MUTEX_INIT, __func__);
+			set_errstat_and_print_errmsg(d, MUTEX_INIT_ERROR, ERRMSG_MUTEX_INIT);
 			break ;
 		}
 		i++;
