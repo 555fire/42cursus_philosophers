@@ -6,13 +6,17 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:55 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/18 22:36:10 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/14 23:44:58 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-static int	all_reached_must_eat_times(t_personal *own_p)
+static int	did_all_reach_must_eat_times(t_personal *own_p);
+static int	did_anyone_die(t_personal *own_p);
+void		*monitor_routine(void *passed_arg_in_the_form_of_void_ptr);
+
+static int	did_all_reach_must_eat_times(t_personal *own_p)
 {
 	size_t	i;
 
@@ -28,7 +32,7 @@ static int	all_reached_must_eat_times(t_personal *own_p)
 	return (HAS_REACHED);
 }
 
-static int	did_anyone_died(t_personal *own_p)
+static int	did_anyone_die(t_personal *own_p)
 {
 	size_t	i;
 	time_t	cur_time;
@@ -37,7 +41,7 @@ static int	did_anyone_died(t_personal *own_p)
 	__DEBUG_PRINT_THREAD_INFO__(own_p->d, own_p);
 	while (i < own_p->d->i.n_philo)
 	{
-		cur_time = get_usec_time(own_p->d);
+		cur_time = get_time_usec(own_p->d);
 		if (own_p->d->errstat)
 			return (DIED_OR_AN_ERROR_HAS_OCCURRED);
 		if (own_p->d->p_arr[i].last_eat_time + own_p->d->i.time_to_die >= \
@@ -64,9 +68,9 @@ void	*monitor_routine(void *passed_arg_in_the_form_of_void_ptr)
 		return (NULL);
 	while (1)
 	{
-		if (all_reached_must_eat_times(own_p) == HAS_REACHED)
+		if (did_all_reach_must_eat_times(own_p) == HAS_REACHED)
 			break ;
-		if (did_anyone_died(own_p) == DIED_OR_AN_ERROR_HAS_OCCURRED)
+		if (did_anyone_die(own_p) == DIED_OR_AN_ERROR_HAS_OCCURRED)
 			break ;
 	}
 	__DEBUG_PRINT_THREAD_INFO__(own_p->d, own_p);

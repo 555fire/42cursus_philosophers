@@ -6,11 +6,13 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:40 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/19 00:45:47 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 17:25:26 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
+
+void	create_threads(t_data *d);
 
 void	create_threads(t_data *d)
 {
@@ -36,7 +38,7 @@ void	create_threads(t_data *d)
 		}
 		if (pthread_create(&d->thread_arr[i], NULL, func_ptr, &d->p_arr[i]))
 		{
-			handle_errors(d, THREAD_CREATE_ERROR, __func__, __LINE__);
+			set_errstat_and_print_stderr_with_debug_info(d, THREAD_CREATE_ERROR, ERRMSG_THREAD_CREATE, __func__);
 			return ;
 		}
 		i++;

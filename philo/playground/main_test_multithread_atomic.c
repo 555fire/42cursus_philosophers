@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 23:05:51 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/17 23:19:55 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 16:49:22 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,37 +29,37 @@ typedef enum e_printstat
 
 void	*routine0(void *passed_arg)
 {
-	_Atomic t_printstat	*atomic_print;
+	_Atomic t_printstat	*atomic_put_stdout;
 
-	atomic_print = passed_arg;
+	atomic_put_stdout = passed_arg;
 	while (1)
 	{
-		if (*atomic_print == UNLOCKED)
+		if (*atomic_put_stdout == UNLOCKED)
 		{
-			*atomic_print = LOCKED;
+			*atomic_put_stdout = LOCKED;
 			break ;
 		}
 	}
 	printf(ANSI_BOLD_BLINK_RED MSG0 ANSI_RESET);
-	*atomic_print = UNLOCKED;
+	*atomic_put_stdout = UNLOCKED;
 	return (NULL);
 }
 
 void	*routine1(void *passed_arg)
 {
-	_Atomic t_printstat	*atomic_print;
+	_Atomic t_printstat	*atomic_put_stdout;
 
-	atomic_print = passed_arg;
+	atomic_put_stdout = passed_arg;
 	while (1)
 	{
-		if (*atomic_print == UNLOCKED)
+		if (*atomic_put_stdout == UNLOCKED)
 		{
-			*atomic_print = LOCKED;
+			*atomic_put_stdout = LOCKED;
 			break ;
 		}
 	}
 	printf(ANSI_BOLD_BLINK_RED MSG1 ANSI_RESET);
-	*atomic_print = UNLOCKED;
+	*atomic_put_stdout = UNLOCKED;
 	return (NULL);
 }
 
@@ -67,15 +67,15 @@ int	main(int argc, char **argv)
 {
 	pthread_t			thread0;
 	pthread_t			thread1;
-	_Atomic t_printstat	atomic_print;
+	_Atomic t_printstat	atomic_put_stdout;
 
 	(void)argc;
 	(void)argv;
-	printf(MSG2, atomic_print);
-	atomic_print = UNLOCKED;
-	printf(MSG3, atomic_print);
-	pthread_create(&thread0, NULL, routine0, &atomic_print);
-	pthread_create(&thread1, NULL, routine1, &atomic_print);
+	printf(MSG2, atomic_put_stdout);
+	atomic_put_stdout = UNLOCKED;
+	printf(MSG3, atomic_put_stdout);
+	pthread_create(&thread0, NULL, routine0, &atomic_put_stdout);
+	pthread_create(&thread1, NULL, routine1, &atomic_put_stdout);
 	pthread_join(thread0, NULL);
 	pthread_join(thread1, NULL);
 	printf(MSG4);

@@ -6,11 +6,13 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:37 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/19 00:45:37 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 17:24:56 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
+
+void	clean_resources(t_data *d);
 
 void	clean_resources(t_data *d)
 {
@@ -26,7 +28,7 @@ void	clean_resources(t_data *d)
 	{
 		if (pthread_join(d->thread_arr[i], NULL))
 		{
-			handle_errors(d, THREAD_JOIN_ERROR, __func__, __LINE__);
+			set_errstat_and_print_stderr_with_debug_info(d, THREAD_JOIN_ERROR, ERRMSG_THREAD_JOIN, __func__);
 			break ;
 		}
 		i++;
@@ -36,7 +38,7 @@ void	clean_resources(t_data *d)
 	{
 		if (pthread_mutex_destroy(&d->mutexfork_arr[i]))
 		{
-			handle_errors(d, MUTEX_DESTROY_ERROR, __func__, __LINE__);
+			set_errstat_and_print_stderr_with_debug_info(d, MUTEX_DESTROY_ERROR, ERRMSG_MUTEX_DESTROY, __func__);
 			break ;
 		}
 		i++;

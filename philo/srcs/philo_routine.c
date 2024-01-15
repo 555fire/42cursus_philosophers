@@ -6,11 +6,16 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:00 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/19 00:51:39 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 17:27:51 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
+
+static t_funcstat	try_to_take_forks(t_personal *own_p);
+static t_funcstat	philo_eat(t_personal *own_p);
+static t_funcstat	philo_sleep(t_personal *own_p);
+void				*philo_routine(void *passed_arg_in_the_form_of_void_ptr);
 
 static t_funcstat	try_to_take_forks(t_personal *own_p)
 {
@@ -23,14 +28,14 @@ static t_funcstat	try_to_take_forks(t_personal *own_p)
 	__DEBUG_PRINT_THREAD_INFO__(own_p->d, own_p);
 	if (pthread_mutex_lock(&own_p->d->mutexfork_arr[own_p->rhf_i]))
 	{
-		handle_errors(own_p->d, MUTEX_LOCK_ERROR, __func__, __LINE__);
+		set_errstat_and_print_stderr_with_debug_info(own_p->d, MUTEX_LOCK_ERROR, ERRMSG_MUTEX_LOCK, __func__);
 		return (1);
 	}
 	__DEBUG_PRINT_THREAD_INFO__(own_p->d, own_p);
 	print_philostat(own_p, HASTOOKFORK);
-	pthread_mutex_lock(&own_p->d->mutexfork_arr[own_p->lhf_i]);
+	if (pthread_mutex_lock(&own_p->d->mutexfork_arr[own_p->lhf_i]))
 	{
-		handle_errors(own_p->d, MUTEX_LOCK_ERROR, __func__, __LINE__);
+		set_errstat_and_print_stderr_with_debug_info(own_p->d, MUTEX_LOCK_ERROR, ERRMSG_MUTEX_LOCK, __func__);
 		return (1);
 	}
 	print_philostat(own_p, HASTOOKFORK);
@@ -52,13 +57,13 @@ static t_funcstat	philo_eat(t_personal *own_p)
 	__DEBUG_PRINT_THREAD_INFO__(own_p->d, own_p);
 	if (pthread_mutex_unlock(&own_p->d->mutexfork_arr[own_p->rhf_i]))
 	{
-		handle_errors(own_p->d, MUTEX_UNLOCK_ERROR, __func__, __LINE__);
+		set_errstat_and_print_stderr_with_debug_info(own_p->d, MUTEX_UNLOCK_ERROR, ERRMSG_MUTEX_UNLOCK, __func__);
 		return (1);
 	}
 	__DEBUG_PRINT_THREAD_INFO__(own_p->d, own_p);
 	if (pthread_mutex_unlock(&own_p->d->mutexfork_arr[own_p->lhf_i]))
 	{
-		handle_errors(own_p->d, MUTEX_UNLOCK_ERROR, __func__, __LINE__);
+		set_errstat_and_print_stderr_with_debug_info(own_p->d, MUTEX_UNLOCK_ERROR, ERRMSG_MUTEX_UNLOCK, __func__);
 		return (1);
 	}
 	__DEBUG_PRINT_THREAD_INFO__(own_p->d, own_p);

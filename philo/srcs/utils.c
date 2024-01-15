@@ -6,11 +6,41 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:12 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/19 00:45:12 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 17:31:21 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
+
+size_t	ft_strlen(const char *s);
+void	putstr_stdout(const char *s);
+void	putstr_stderr(const char *s);
+size_t	ph_atoi(char *s, t_data *d);
+void	*ph_calloc_without_d(size_t count, size_t size);
+void	*ph_calloc(size_t count, size_t size, t_data *d);
+void	free_safely(void *mem0, void *mem1, void *mem2, void *mem3);
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	if (!s)
+		return (0);
+	while (*s)
+		i++;
+	return (i);
+}
+
+void	putstr_stdout(const char *s)
+{
+	write(STDOUT_FILENO, s, ft_strlen(s));
+}
+
+void	putstr_stderr(const char *s)
+{
+	write(STDERR_FILENO, s, ft_strlen(s));
+}
 
 size_t	ph_atoi(char *s, t_data *d)
 {
@@ -25,13 +55,13 @@ size_t	ph_atoi(char *s, t_data *d)
 	{
 		if (*s < '0' || *s > '9')
 		{
-			handle_errors(d, ARGV_ERROR, __func__, __LINE__);
+			set_errstat_and_print_stderr_with_debug_info(d, ARGV_ERROR, ERRMSG_ARGC, __func__);
 			return (0);
 		}
 		if (num > SIZE_MAX / 10 || (num == SIZE_MAX / 10
 				&& (unsigned long)(*s - '0') >= SIZE_MAX % 10))
 		{
-			handle_errors(d, ARGV_ERROR, __func__, __LINE__);
+			set_errstat_and_print_stderr_with_debug_info(d, ARGV_ERROR, ERRMSG_ARGV, __func__);
 			return (0);
 		}
 		num = num * 10 + (*s - '0');
@@ -68,13 +98,13 @@ void	*ph_calloc(size_t count, size_t size, t_data *d)
 
 	if (!count || !size || size > SIZE_MAX / count)
 	{
-		handle_errors(d, CALLOC_ARGS_ERROR, __func__, __LINE__);
+		set_errstat_and_print_stderr_with_debug_info(d, CALLOC_ARGS_ERROR, ERRMSG_CALLOC_ARGS, __func__);
 		return (NULL);
 	}
 	mem = malloc(count * size);
 	if (!mem)
 	{
-		handle_errors(d, MALLOC_ERROR, __func__, __LINE__);
+		set_errstat_and_print_stderr_with_debug_info(d, MALLOC_ERROR, ERRMSG_MALLOC, __func__);
 		return (NULL);
 	}
 	memset(mem, 0, count * size);

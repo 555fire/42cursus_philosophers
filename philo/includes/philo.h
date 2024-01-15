@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:29 by mamiyaza          #+#    #+#             */
-/*   Updated: 2023/12/21 07:00:26 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/15 17:20:02 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@
 
 # define ANSI_RESET "\033[0m"
 
-/*  -----object-like macros for error messages----*/
+/*  -----object-like macros for messages for stderr----*/
 # define ERRMSG_ARGC "USAGE (1):\n\
 \tThis executable file \"philo\" takes 4 or 5 arguments; each arguments refers\n\
 \t\"number_of_philosophers\", \"time_to_die\"(in milliseconds),\n\
@@ -100,11 +100,11 @@
 # define ERRMSG_MUTEX_DESTROY "\tfatal error: pthread_mutex_destroy failed.\n"
 # define ERRMSG_PRINTSTAT "\terror: printstat\n"
 
-/*  -----object-like macros for debug messages----*/
+/*  -----object-like macros for messages for stderr (for debug)----*/
 # define DBGMSG_LOCKED "\tLOCKED\n"
 # define DBGMSG_UNLOCKED "\tUNLOCKED\n"
 
-/*  -----object-like macros for standard messages----*/
+/*  -----object-like macros for messages for stdout----*/
 # define SPC " "
 # define MSG_DIED " died.\n"
 # define MSG_TOOKFORK " has taken a fork.\n"
@@ -112,7 +112,23 @@
 # define MSG_SLEEPING " is sleeping.\n"
 # define MSG_THINKING " is thinking.\n"
 
-/*  -----other object-like macros----*/
+# define MIN_ARGC 5
+# define MAX_ARGC 6
+
+/* -----object-like macros in source file set_data.c----*/
+# define ARGC_NUM_PHILO 1
+# define MIN_NUM_PHILO 1
+# define MAX_NUM_PHILO 200
+
+# define MIN_MINUS_1_ARGC_TIME_TO_DIE_TIME_TO_EAT_TIME_TO_SLEEP 1
+# define MAX_PLUS_1_ARGC_TIME_TO_DIE_TIME_TO_EAT_TIME_TO_SLEEP 5
+# define MIN_TIME_TO_DIE_TIME_TO_EAT_TIME_TO_SLEEP 60
+# define MAX_TIME_TO_DIE_TIME_TO_EAT_TIME_TO_SLEEP INT_MAX
+
+# define ARGC_NUM_EAT 5
+# define MIN_NUM_EAT 0
+# define MAX_NUM_EAT INT_MAX
+
 # define NUM_OF_MONITORS 1
 
 /*----structures, enumerations, unions and typedefs----*/
@@ -245,10 +261,10 @@ struct s_data
 /*----prototype declarations of external linkage functions----*/
 /* -----main.c----*/
 /* -----set_data.c----*/
-t_data		*set_data(t_data *d, size_t argc, char **argv);
+t_data		*set_data(size_t argc, char **argv);
 
 /* -----get_time_in_microsec.c----*/
-time_t		get_usec_time(t_data *d);
+time_t		get_time_usec(t_data *d);
 t_funcstat	wait_precise_time(t_data *d, time_t target_time);
 
 /* -----create_threads.c----*/
@@ -266,16 +282,27 @@ void		clean_resources(t_data *d);
 /* -----print_stats.c----*/
 void		lock_printstat(t_data *d);
 void		unlock_printstat(t_data *d);
-void		print_atomically(t_data *d, char *s);
-void		perror_atomically(t_data *d, char *s, const char *func, int line);
-void		handle_error(t_data *d, t_errstat errstat);
-void		handle_errors(t_data *d, t_errstat errstat, const char *func, int line);
-void		print_errstat(t_data *d, t_errstat errstat);
-void		print_errstats(t_errstat errstat, const char *func, int line);
+//
+void		atomic_put_stdout(t_data *d, const char *s);
+void		atomic_put_stderr(t_data *d, const char *s);
+void		atomic_put_stderr_with_debug_info(t_data *d, const char *s, const char *func);
+//
+void		set_errstat_and_print_stderr(t_data *d, t_errstat errstat, const char *s);
+void		set_errstat_and_print_stderr_with_debug_info(t_data *d, t_errstat errstat, const char *s, const char *func);
+//
+//void		set_and_print_errstat(t_data *d, t_errstat errstat);
+//void		set_and_print_errstat_and_print_debug_info(t_data *d, t_errstat errstat, const char *func, int line);
+//
+//void		print_errstat(t_data *d, t_errstat errstat);
+//void		print_errstat_and_debug_info(t_errstat errstat, const char *func, int line);
 t_funcstat	print_philostat(t_personal *own_p, t_philostat philostat);
 t_funcstat	print_simustat(t_personal *own_p, t_simustat simustat);
 
 /* -----utils.c----*/
+size_t		ft_strlen(const char *s);
+void		putstr_stdout(const char *s);
+void		putstr_stderr(const char *s);
+//
 size_t		ph_atoi(char *s, t_data *d);
 void		*ph_calloc_without_d(size_t size, size_t count);
 void		*ph_calloc(size_t size, size_t count, t_data *d);
