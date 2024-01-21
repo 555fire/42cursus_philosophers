@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:29 by mamiyaza          #+#    #+#             */
-/*   Updated: 2024/01/15 21:15:12 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/17 20:29:47 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,8 +203,8 @@ enum e_have_everyone_reached
 typedef enum e_did_anyone_die		t_did_anyone_die;
 enum e_did_anyone_die
 {
-	DIDNT_DIE,
-	DIED_OR_AN_ERROR_HAS_OCCURRED,
+	HASNT_DIED,
+	HAS_DIED,
 };
 
 typedef struct s_input				t_input;
