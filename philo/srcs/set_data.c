@@ -6,7 +6,7 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:55:08 by mamiyaza          #+#    #+#             */
-/*   Updated: 2024/01/15 21:20:28 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/01/22 15:35:07 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ t_data	*set_data(size_t argc, char **argv)
 {
 	t_data	*d;
 
-	d = ft_calloc_without_d(sizeof(t_data), 1);
+	d = ft_calloc_without_d(1, sizeof(t_data));
 	if (!d)
 		return (d);
 	if (validate_and_set_args(d, argc, argv))
