@@ -3,5 +3,7 @@
 *.out
 *.md
 *.vscode
+*.json
+*.swp
 *.DS_Store
 philo/philo

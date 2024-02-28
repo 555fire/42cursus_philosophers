@@ -6,41 +6,36 @@
 /*   By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:54:40 by mamiyaza          #+#    #+#             */
-/*   Updated: 2024/01/15 21:15:12 by mamiyaza         ###   ########.fr       */
+/*   Updated: 2024/02/22 21:26:09 by mamiyaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo.h"
+#include "philo.h"
 
-void	create_threads(t_data *d);
+t_funcstat	create_threads(t_data *d, const size_t n_philo,
+				t_personal **const p_arr, pthread_t **const thread_arr);
 
-void	create_threads(t_data *d)
+t_funcstat	create_threads(t_data *d, const size_t n_philo,
+	t_personal **const p_arr, pthread_t **const thread_arr)
 {
 	size_t	i;
-	void	*func_ptr;
+	void	*thread_routine;
 
-	if (errno || d->simustat != SIMU_LASTS)
-		return ;
 	i = 0;
-	while (i <= d->i.n_philo)
+	while (i <= n_philo)
 	{
-		d->p_arr[i].d = d;
-		d->p_arr[i].philo_i = i;
+		(*p_arr)[i].d = d;
+		(*p_arr)[i].philo_i = i;
 		if (i == 0)
-		{
-			d->p_arr[i].threadrole = A_MONITOR;
-			func_ptr = &monitor_routine;
-		}
+			thread_routine = &monitor_routine;
 		else
+			thread_routine = &philo_routine;
+		if (pthread_create(&(*thread_arr)[i], NULL, thread_routine, &(*p_arr)[i]))
 		{
-			d->p_arr[i].threadrole = ONE_OF_PHILOS;
-			func_ptr = &philo_routine;
-		}
-		if (pthread_create(&d->thread_arr[i], NULL, func_ptr, &d->p_arr[i]))
-		{
-			set_errstat_simustat_and_print_errmsg(d, THREAD_CREATE_ERROR, ERRMSG_THREAD_CREATE);
-			return ;
+			putstr_stderr_atomic(&d->printstat, ANSI_BOLD_RED ERRMSG_THREAD_CREATE ANSI_RESET);
+			return (FAIL);
 		}
 		i++;
 	}
+	return (SUCCESS);
 }
