@@ -6,15 +6,12 @@
 #    By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/13 23:33:38 by mamiyaza          #+#    #+#              #
-#    Updated: 2024/02/20 20:17:23 by mamiyaza         ###   ########.fr        #
+#    Updated: 2024/03/01 04:29:20 by mamiyaza         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Make rules
 #  Make rules for testcases
-
-# print:
-# 	make -f- aaa <<< '$(MAKECMDGOALS)'
 
 leak:
 	CALL_DESTRUCTOR=1
@@ -118,3 +115,5 @@ test_e:
 	./$(NAME) $(ERROR_CASE_ATOI_NON_NUMERIC_CHARS14)
 	./$(NAME) $(ERROR_CASE_ATOI_NON_NUMERIC_CHARS15)
 	make fclean
+
+.PHONY: leak test0 test1 test2 test_e

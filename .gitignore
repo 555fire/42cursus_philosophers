@@ -1,9 +1,15 @@
+# middle product
 *.o
+*.d
 *.a
+
+# final product
 *.out
+philo/philo
+
+# other
 *.md
 *.vscode
 *.json
 *.swp
 *.DS_Store
-philo/philo
