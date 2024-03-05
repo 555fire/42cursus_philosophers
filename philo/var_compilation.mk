@@ -6,15 +6,18 @@
 #    By: mamiyaza <mamiyaza@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 20:23:42 by mamiyaza          #+#    #+#              #
-#    Updated: 2024/03/01 19:31:59 by mamiyaza         ###   ########.fr        #
+#    Updated: 2024/03/05 13:50:30 by mamiyaza         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # variable definition
 #  variable definition for compilation
 
+# TARGET := philo
 NAME := philo
+# NAME := $(TARGET)
 
+# make: Circular philo <- all dependency dropped.
 
 SRCS_DIR := srcs/
 
@@ -78,13 +81,13 @@ INCS_DIR := incs
 INCS_PATH := -I./$(INCS_DIR)
 
 
-CC := gcc
+CC := cc
 CFLAGS := -Wall -Wextra -Werror -pthread -MMD -MP
 # CFLAGS := -Wall -Wextra -Werror -pthread
 # CFLAGS := -Wall -Wextra -Werror -g3 -O0 -pthread -fsanitize=address,undefined -ferror-limit=50
 
-MKDIR := mkdir -p
-RM := rm -rf
+MKDIR_P := mkdir -p
+RM_RF := rm -rf
 
 SOFT_SILENT :=
 SILENT := @
